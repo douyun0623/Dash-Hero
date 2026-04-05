@@ -1,7 +1,7 @@
 # Dash-Hero
 
 ## **프로젝트 관련 링크**
-* **발표 영상 자료**: [발표 영상 링크](https://youtu.be/PaeCd69xw9M)
+* **발표 영상 자료**: [발표 영상 링크](https://youtu.be/XtZi-GZ4ehE)
 * **Git Repository**: [GitHub 저장소 링크](https://github.com/douyun0623/Dash-Hero)
 * **README.md**: [README.md 링크](https://github.com/douyun0623/Dash-Hero/blob/main/README.md)
 
