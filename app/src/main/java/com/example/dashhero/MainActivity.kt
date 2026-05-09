@@ -1,20 +1,17 @@
 package com.example.dashhero
 
-import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.example.dashhero.game.scene.MainScene
+import kr.ac.tukorea.ge.spgp2026.a2dg.activity.BaseGameActivity
+import kr.ac.tukorea.ge.spgp2026.a2dg.scene.Scene
+import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+class MainActivity : BaseGameActivity() {
+    override val drawsDebugGrid = BuildConfig.DRAWS_DEBUG_GRID
+    override val drawsDebugInfo = BuildConfig.DRAWS_DEBUG_INFO
+    override val drawsFpsGraph = BuildConfig.DRAWS_FPS_GRAPH
+
+    override fun createRootScene(gctx: GameContext): Scene {
+        gctx.metrics.setSize(900f, 1600f)
+        return MainScene(gctx)
     }
 }

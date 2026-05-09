@@ -20,9 +20,21 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     buildTypes {
+        debug {
+            buildConfigField("boolean", "DRAWS_DEBUG_GRID", "true")
+            buildConfigField("boolean", "DRAWS_DEBUG_INFO", "true")
+            buildConfigField("boolean", "DRAWS_FPS_GRAPH", "true")
+        }
         release {
             isMinifyEnabled = false
+            buildConfigField("boolean", "DRAWS_DEBUG_GRID", "false")
+            buildConfigField("boolean", "DRAWS_DEBUG_INFO", "false")
+            buildConfigField("boolean", "DRAWS_FPS_GRAPH", "false")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
