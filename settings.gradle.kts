@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "DashHero"
 include(":app")
+include(":a2dg")
