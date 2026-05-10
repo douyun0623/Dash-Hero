@@ -25,7 +25,7 @@ class Enemy(
     private val width = 110f
     private val height = 110f
     private val gravity = 2400f
-    private val jumpVelocity = -850f // 플레이어보다 낮게 점프
+    private val jumpVelocity = -800f // 플레이어(-1000f)보다 낮게 점프하여 밟기 쉽게 함
     private val crouchDuration = 0.2f
 
     private var velocityX = 0f
@@ -105,6 +105,15 @@ class Enemy(
         bounds.set(x - width / 2f, y - height / 2f, x + width / 2f, y + height / 2f)
         canvas.drawRoundRect(bounds, 20f, 20f, paint)
         canvas.restore()
+
+        // 디버그용 충돌 박스 가시화 (빨간색 테두리)
+        val debugPaint = Paint().apply {
+            color = Color.RED
+            style = Paint.Style.STROKE
+            strokeWidth = 4f
+        }
+        val bb = getBoundingBox()
+        canvas.drawRect(bb, debugPaint)
     }
 
     fun isOffScreen(): Boolean {

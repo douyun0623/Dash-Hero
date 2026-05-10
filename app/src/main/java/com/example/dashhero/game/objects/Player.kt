@@ -21,7 +21,7 @@ class Player(
     private val height = 140f
 
     private val gravity = 2400f
-    private val jumpVelocity = -1200f
+    private val jumpVelocity = -1000f
     private val dashDuration = 0.24f
     private val baseX = x
     private val dashLeadX = 620f
@@ -43,11 +43,18 @@ class Player(
         get() = x
     val screenY: Float
         get() = y
+    val currentVelocityY: Float
+        get() = velocityY
 
     fun dash() {
         dashTimeLeft = dashDuration
         dashLockedY = y
         velocityY = 0f
+    }
+
+    fun bounce() {
+        velocityY = jumpVelocity * 0.9f // 점프보다 약간 낮은 높이로 튕김
+        crouchTimeLeft = 0f // 즉시 공중 상태로
     }
 
     fun clampForwardLimit(limitX: Float): Float {
@@ -144,5 +151,14 @@ class Player(
         val drawHeight = if (isCrouching) height * 0.76f else height
         bounds.set(x - drawWidth / 2f, y - drawHeight / 2f, x + drawWidth / 2f, y + drawHeight / 2f)
         canvas.drawRoundRect(bounds, 32f, 32f, paint)
+
+        // 디버그용 충돌 박스 가시화 (빨간색 테두리)
+        val debugPaint = Paint().apply {
+            color = Color.RED
+            style = Paint.Style.STROKE
+            strokeWidth = 4f
+        }
+        val bb = getBoundingBox()
+        canvas.drawRect(bb, debugPaint)
     }
 }

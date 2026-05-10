@@ -86,9 +86,16 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         val playerBB = player.getBoundingBox()
         for (enemy in platformManager.getEnemies()) {
             if (enemy.isAlive && RectF.intersects(playerBB, enemy.getBoundingBox())) {
+                val enemyBB = enemy.getBoundingBox()
+                
                 if (player.isDashing) {
+                    // 1. 대시 공격 (처치)
                     enemy.die()
+                } else if (player.currentVelocityY > 0 && playerBB.bottom <= enemyBB.top + 40f) {
+                    // 2. 밟기 판정: 하강 중이고 발바닥이 적 머리 근처일 때
+                    player.bounce()
                 } else {
+                    // 3. 일반 충돌 (사망)
                     state = State.GAME_OVER
                 }
             }
