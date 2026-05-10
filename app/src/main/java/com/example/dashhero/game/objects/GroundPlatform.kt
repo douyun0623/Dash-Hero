@@ -19,14 +19,12 @@ class GroundPlatform(
     }
     var scrollSpeed = 0f
 
-    fun scrollBy(distance: Float, screenWidth: Float) {
+    fun scrollBy(distance: Float) {
         x -= distance
-        recycleIfNeeded(screenWidth)
     }
 
     override fun update(gctx: GameContext) {
         x += scrollSpeed * gctx.frameTime
-        recycleIfNeeded(gctx.metrics.width)
     }
 
     override fun draw(canvas: Canvas) {
@@ -34,9 +32,7 @@ class GroundPlatform(
         canvas.drawRoundRect(bounds, 24f, 24f, paint)
     }
 
-    private fun recycleIfNeeded(screenWidth: Float) {
-        if (x + width / 2f < 0f) {
-            x += screenWidth + width
-        }
+    fun isOffScreen(): Boolean {
+        return x + width / 2f < -100f // 마진을 약간 둠
     }
 }

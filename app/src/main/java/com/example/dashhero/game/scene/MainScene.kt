@@ -8,7 +8,7 @@ import android.view.MotionEvent
 import com.example.dashhero.R
 import com.example.dashhero.game.objects.DashScrollBackground
 import com.example.dashhero.game.objects.DashTrail
-import com.example.dashhero.game.objects.GroundPlatform
+import com.example.dashhero.game.objects.PlatformManager
 import com.example.dashhero.game.objects.Player
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.Scene
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.World
@@ -40,14 +40,14 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
 
     private val player = Player(180f, 1110f)
     private val background = DashScrollBackground(gctx, R.drawable.bg_dash_city, BASE_BG_SPEED)
-    private val platform = GroundPlatform(450f, 1210f, 640f, 60f)
+    private val platformManager = PlatformManager(gctx.metrics.width)
     private val dashTrail = DashTrail()
     private var pendingScrollDistance = 0f
     private var activeTrailStretch = 0f
 
     init {
         world.add(background, Layer.BG)
-        world.add(platform, Layer.PLATFORM)
+        world.add(platformManager, Layer.PLATFORM)
         world.add(dashTrail, Layer.TRAIL)
         world.add(player, Layer.PLAYER)
     }
@@ -56,7 +56,6 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         val beforePlayerX = player.screenX
         val wasDashing = player.isDashing
         background.speed = 0f
-        platform.scrollSpeed = 0f
         super.update(gctx)
 
         val attemptedPlayerX = player.screenX
@@ -67,7 +66,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         val scrollStep = nextScrollStep(gctx.frameTime)
         if (scrollStep > 0f) {
             background.scrollBy(scrollStep * BG_SCROLL_RATIO)
-            platform.scrollBy(scrollStep, gctx.metrics.width)
+            platformManager.scrollBy(scrollStep)
         }
 
         if (player.isDashing) {
