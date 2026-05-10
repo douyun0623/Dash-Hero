@@ -18,11 +18,15 @@
 
 - [ ] `Sprite`
   - [ ] bitmap 을 바꿀 수 있는 public API 추가
+  - [x] `setCenter()`, `setSize()` helper 에서 `dstRect` 를 바로 sync 하도록 정리
+  - [x] `setCenterProportionalWidth()` helper 로 bitmap 비율을 유지한 채 중심과 가로폭을 함께 맞출 수 있게 정리
+  - [x] `setCenterProportionalHeight()` helper 로 bitmap 비율을 유지한 채 중심과 세로폭을 함께 맞출 수 있게 정리
+  - [x] `draw()` 에서 매번 sync 하지 않고, subclass 초기화 순서에 맞춰 `syncDstRect()` 를 호출하는 규칙 정리
 
-- [ ] `AnimSprite`
-  - [ ] 여러 frame 을 순서대로 보여주는 공통 클래스 추가
-  - [ ] frame index 로 `srcRect` 를 바꾸기
-  - [ ] fps 를 변경할 수 있는 API 추가
+- [x] `AnimSprite`
+  - [x] 여러 frame 을 순서대로 보여주는 공통 클래스 추가
+  - [x] frame index 로 `srcRect` 를 바꾸기
+  - [x] fps 를 변경할 수 있는 API 추가
   - [ ] pause 되었을 때 애니메이션이 어떻게 동작해야 하는지 정리
 
 - [ ] `SheetSprite`
@@ -31,21 +35,34 @@
 
 
 - [ ] Background objects
-  - [ ] 세로 스크롤 Background 공통 클래스 추가
-  - [ ] 가로 스크롤 Background 공통 클래스 추가
+  - [x] 세로 스크롤 Background 공통 클래스 추가
+  - [x] 가로 스크롤 Background 공통 클래스 추가
+    - [x] 파일 복사
+    - [x] Vert -> Horz 로 변경
   - [ ] `TiledBackground` 공통 클래스 추가
   - [ ] 게임별 Background subclass 예제 추가
 
 - [ ] UI / HUD objects
-  - [ ] `Gauge` 공통 클래스 추가
-  - [ ] `Score` 같이 숫자 변화가 보이는 공통 HUD 객체 추가
-  - [ ] `Text` 같은, 문자열을 표시하는 공통 HUD 객체 추가
+  - [x] `Gauge` 공통 클래스 추가
+  - [x] `ImageNumber` 공통 클래스 추가
+  - [x] `LabelUtil` 공통 클래스 추가
   - [ ] `Button` 공통 클래스 추가
 
-## Scene / View / Game Loop
+## Scene / World / View / Game Loop
 
 - [ ] `GameView`
-  - [ ] frame time 이 비정상적으로 커지는 경우 대비
+  - [x] Activity resume 직후 첫 frame 의 nanos 차이가 pause 시간까지 포함되지 않도록 리셋
+  - [x] frame time 이 비정상적으로 커지는 경우 대비
+
+- [x] `World`
+  - [x] `objectsAt(layer)` 로 특정 layer 의 읽기 전용 객체 목록을 가져오기
+  - [x] `forEachReversedAt(layer)` 로 삭제에 안전한 역순 순회 helper 추가
+  - [x] `forEachReversedAt(layer)` 를 `inline` 으로 정리
+  - [x] `public inline` 함수가 `private` 필드에 접근할 수 없어 `@PublishedApi internal` 이 필요하다는 점 정리
+  - [x] `IBoxCollidable` 객체의 collision box 디버그 draw 를 `World.draw()` 로 이동
+  - [x] recycle bin 과 `obtain(clazz)` 추가
+  - [x] `remove()` 가 `IRecyclable` 객체를 자동 수거하도록 정리
+  - [x] `update()` / `draw()` 의 layer 순회를 iterator 없이 돌도록 정리
 
 - [ ] Scene lifecycle
   - [ ] Scene 이 transparent 하게 위에 올라가는 경우
@@ -95,11 +112,12 @@
   - [ ] `JoyStick` 와 `Button` 이 생기면 공통 터치 계약이 필요한지 다시 보기
 
 - [ ] 충돌 / layer 관련 인터페이스
-  - [ ] `IBoxCollidable` 이 필요한지 검토
+  - [x] `IBoxCollidable` 추가
+  - [x] `collidesWith()` extension 으로 AABB 충돌 helper 추가
   - [ ] `ILayerProvider` 같은 보조 인터페이스가 필요한지 검토
 
 - [ ] 재활용 / 생명주기 관련 패턴
-  - [ ] `IRecyclable` 이 필요한지 검토
+  - [x] `IRecyclable` 추가
   - [ ] 재활용 가능한 객체 패턴
   - [ ] 재활용과 Scene / World 생명주기 관계 정리
 
