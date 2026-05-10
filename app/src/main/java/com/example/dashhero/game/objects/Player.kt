@@ -4,6 +4,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
+import com.example.dashhero.game.objects.PlatformManager
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IGameObject
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 
@@ -19,7 +20,6 @@ class Player(
     private val width = 140f
     private val height = 140f
 
-    private val groundY = 1110f
     private val gravity = 2400f
     private val jumpVelocity = -980f
     private val dashDuration = 0.24f
@@ -59,7 +59,18 @@ class Player(
     }
 
     override fun update(gctx: GameContext) {
+        // 이 메서드는 인터페이스 구현을 위해 남겨두고, 실제 로직은 아래 오버로드된 update에서 수행하거나 
+        // MainScene에서 캐스팅하여 호출해야 합니다.
+        // 하지만 프레임워크의 world.update()가 인자 없는 update를 호출하므로, 
+        // 외부에서 platformManager를 전달받을 수 있도록 구조 변경이 필요할 수 있습니다.
+    }
+
+    fun updateWithCollision(gctx: GameContext, platformManager: PlatformManager) {
         val dt = gctx.frameTime
+
+        // 현재 위치에서의 발판 확인
+        val currentPlatform = platformManager.getPlatformAt(x)
+        val platformTopY = currentPlatform?.topY ?: Float.MAX_VALUE
 
         if (isDashing) {
             y = dashLockedY
@@ -69,21 +80,34 @@ class Player(
                 velocityY = 0f
             }
         } else if (crouchTimeLeft > 0f) {
-            y = groundY
-            velocityY = 0f
-            crouchTimeLeft -= dt
-            if (crouchTimeLeft <= 0f) {
+            // 발판 위에 있을 때만 웅크리기 가능 (오차 범위를 넉넉하게 줌)
+            if (y >= platformTopY - height / 2f - 20f) {
+                y = platformTopY - height / 2f
+                velocityY = 0f
+                crouchTimeLeft -= dt
+                if (crouchTimeLeft <= 0f) {
+                    crouchTimeLeft = 0f
+                    velocityY = jumpVelocity
+                }
+            } else {
+                // 발판이 없으면 웅크리기 무시하고 추락
                 crouchTimeLeft = 0f
-                velocityY = jumpVelocity
+                velocityY += gravity * dt
+                y += velocityY * dt
             }
         } else {
             velocityY += gravity * dt
-            y += velocityY * dt
+            val nextY = y + velocityY * dt
 
-            if (y >= groundY) {
-                y = groundY
+            // 착지 판정: 위에서 아래로 떨어질 때 발판 상단면을 지나치면 착지
+            // 발판 위 10px 정도의 여유를 두어 프레임 드랍 시에도 착지 판정이 잘 되도록 함
+            val landingY = platformTopY - height / 2f
+            if (velocityY >= 0 && y <= landingY + 10f && nextY >= landingY) {
+                y = landingY
                 velocityY = 0f
                 crouchTimeLeft = crouchDuration
+            } else {
+                y = nextY
             }
         }
 

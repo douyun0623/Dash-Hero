@@ -8,11 +8,13 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IGameObject
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 
 class GroundPlatform(
-    private var x: Float,
+    var x: Float,
     private val y: Float,
-    private val width: Float,
+    val width: Float,
     private val height: Float,
 ) : IGameObject {
+    val screenX: Float
+        get() = x
     private val bounds = RectF()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.rgb(80, 180, 120)
@@ -31,6 +33,9 @@ class GroundPlatform(
         bounds.set(x - width / 2f, y - height / 2f, x + width / 2f, y + height / 2f)
         canvas.drawRoundRect(bounds, 24f, 24f, paint)
     }
+
+    val topY: Float
+        get() = y - height / 2f
 
     fun isOffScreen(): Boolean {
         return x + width / 2f < -100f // 마진을 약간 둠

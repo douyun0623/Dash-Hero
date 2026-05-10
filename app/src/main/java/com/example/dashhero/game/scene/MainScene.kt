@@ -23,7 +23,13 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         UI,
     }
 
+    enum class State {
+        RUNNING,
+        GAME_OVER,
+    }
+
     override val world = World(enumValues<Layer>())
+    private var state = State.RUNNING
 
     private val titlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
@@ -38,7 +44,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         textSize = 34f
     }
 
-    private val player = Player(180f, 1110f)
+    private val player = Player(180f, 400f) // 400f로 확실하게 상향 조정
     private val background = DashScrollBackground(gctx, R.drawable.bg_dash_city, BASE_BG_SPEED)
     private val platformManager = PlatformManager(gctx.metrics.width)
     private val dashTrail = DashTrail()
@@ -53,10 +59,22 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
     }
 
     override fun update(gctx: GameContext) {
+        if (state == State.GAME_OVER) return
+
         val beforePlayerX = player.screenX
         val wasDashing = player.isDashing
         background.speed = 0f
-        super.update(gctx)
+        
+        // world.update 대신 수동 업데이트를 통해 인자 전달
+        background.update(gctx)
+        platformManager.update(gctx)
+        dashTrail.update(gctx)
+        player.updateWithCollision(gctx, platformManager)
+
+        // 게임 오버 체크: 플레이어가 화면 아래로 추락
+        if (player.screenY > 1600f) {
+            state = State.GAME_OVER
+        }
 
         val attemptedPlayerX = player.screenX
         val returnDistance = (beforePlayerX - attemptedPlayerX).coerceAtLeast(0f)
@@ -115,11 +133,23 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         world.draw(canvas)
 
         canvas.drawText("Dash Hero", gctx.metrics.width / 2f, 360f, titlePaint)
-        canvas.drawText("MainScene is running with a2dg", gctx.metrics.width / 2f, 430f, bodyPaint)
+        
+        if (state == State.GAME_OVER) {
+            canvas.drawColor(Color.argb(160, 0, 0, 0))
+            canvas.drawText("GAME OVER", gctx.metrics.width / 2f, gctx.metrics.height / 2f, titlePaint)
+            canvas.drawText("Tap to Restart", gctx.metrics.width / 2f, gctx.metrics.height / 2f + 100f, bodyPaint)
+        } else {
+            canvas.drawText("MainScene is running with a2dg", gctx.metrics.width / 2f, 430f, bodyPaint)
+        }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
+            if (state == State.GAME_OVER) {
+                gctx.sceneStack.change(MainScene(gctx))
+                return true
+            }
+
             // 대시 시작 시점에 스트레치를 0에서 시작하여 '개기지' 않게 함
             if (!player.isDashing) {
                 activeTrailStretch = 0f

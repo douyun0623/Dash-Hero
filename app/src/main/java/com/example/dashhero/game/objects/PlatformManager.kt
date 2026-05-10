@@ -34,6 +34,14 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
         mapIndex = (mapIndex + 1) % mapData.length
     }
 
+    fun getPlatformAt(x: Float): GroundPlatform? {
+        return platforms.find { p ->
+            val left = p.screenX - p.width / 2f
+            val right = p.screenX + p.width / 2f
+            x in left..right
+        }
+    }
+
     fun scrollBy(distance: Float) {
         lastX -= distance
         val iterator = platforms.iterator()
