@@ -39,7 +39,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
     private val player = Player(180f, 1110f)
     private val background = DashScrollBackground(gctx, R.drawable.bg_dash_city, BASE_BG_SPEED)
     private val platform = GroundPlatform(450f, 1210f, 640f, 60f)
-    private var scrollSpeed = BASE_SCROLL_SPEED
+    private var pendingScrollDistance = 0f
 
     init {
         world.add(background, Layer.BG)
@@ -48,12 +48,33 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
     }
 
     override fun update(gctx: GameContext) {
-        val targetScrollSpeed = if (player.isDashing) DASH_SCROLL_SPEED else BASE_SCROLL_SPEED
-        scrollSpeed += (targetScrollSpeed - scrollSpeed) * SCROLL_ACCELERATION
-
-        background.speed = scrollSpeed * BG_SPEED_RATIO
-        platform.scrollSpeed = scrollSpeed
+        val beforePlayerX = player.screenX
+        background.speed = 0f
+        platform.scrollSpeed = 0f
         super.update(gctx)
+
+        val afterPlayerX = player.screenX
+        val returnDistance = (beforePlayerX - afterPlayerX).coerceAtLeast(0f)
+        val overflowDistance = player.clampForwardLimit(SCROLL_TRIGGER_X)
+        pendingScrollDistance += returnDistance + overflowDistance
+
+        val scrollStep = nextScrollStep(gctx.frameTime)
+        if (scrollStep > 0f) {
+            background.scrollBy(scrollStep * BG_SCROLL_RATIO)
+            platform.scrollBy(scrollStep, gctx.metrics.width)
+        }
+    }
+
+    private fun nextScrollStep(dt: Float): Float {
+        if (pendingScrollDistance <= 0f) return 0f
+
+        val easedStep = pendingScrollDistance * SCROLL_EASE * dt
+        val minStep = SCROLL_MIN_SPEED * dt
+        val maxStep = SCROLL_MAX_SPEED * dt
+        val scrollStep = minOf(maxOf(easedStep, minStep), maxStep, pendingScrollDistance)
+
+        pendingScrollDistance -= scrollStep
+        return scrollStep
     }
 
     override fun draw(canvas: Canvas) {
@@ -72,10 +93,11 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
     }
 
     companion object {
-        private const val BASE_SCROLL_SPEED = -80f
-        private const val DASH_SCROLL_SPEED = -760f
-        private const val BG_SPEED_RATIO = 0.7f
-        private const val BASE_BG_SPEED = BASE_SCROLL_SPEED * BG_SPEED_RATIO
-        private const val SCROLL_ACCELERATION = 0.18f
+        private const val SCROLL_TRIGGER_X = 620f
+        private const val BG_SCROLL_RATIO = 0.7f
+        private const val BASE_BG_SPEED = 0f
+        private const val SCROLL_EASE = 12f
+        private const val SCROLL_MIN_SPEED = 180f
+        private const val SCROLL_MAX_SPEED = 2400f
     }
 }

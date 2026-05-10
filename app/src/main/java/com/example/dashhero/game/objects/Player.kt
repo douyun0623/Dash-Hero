@@ -24,8 +24,11 @@ class Player(
     private val jumpVelocity = -980f
     private val dashDuration = 0.24f
     private val baseX = x
-    private val dashLeadX = 310f
-    private val returnSpeed = 1500f
+    private val dashLeadX = 620f
+    private val dashMoveSpeed = 1500f
+    private val returnEase = 8.5f
+    private val returnMinSpeed = 120f
+    private val returnSnapDistance = 1.5f
     private val crouchDuration = 0.16f
 
     private var velocityY = 0f
@@ -34,11 +37,23 @@ class Player(
     private var dashLockedY = y
     val isDashing: Boolean
         get() = dashTimeLeft > 0f
+    val dashForwardRatio: Float
+        get() = ((x - baseX) / dashLeadX).coerceIn(0f, 1f)
+    val screenX: Float
+        get() = x
 
     fun dash() {
         dashTimeLeft = dashDuration
         dashLockedY = y
         velocityY = 0f
+    }
+
+    fun clampForwardLimit(limitX: Float): Float {
+        val overflow = (x - limitX).coerceAtLeast(0f)
+        if (overflow > 0f) {
+            x = limitX
+        }
+        return overflow
     }
 
     override fun update(gctx: GameContext) {
@@ -72,9 +87,15 @@ class Player(
 
         val targetX = if (isDashing) baseX + dashLeadX else baseX
         if (x < targetX) {
-            x = minOf(targetX, x + returnSpeed * dt)
+            x = minOf(targetX, x + dashMoveSpeed * dt)
         } else if (x > targetX) {
-            x = maxOf(targetX, x - returnSpeed * dt)
+            val distance = x - targetX
+            if (distance <= returnSnapDistance) {
+                x = targetX
+            } else {
+                val easedStep = maxOf(distance * returnEase * dt, returnMinSpeed * dt)
+                x = maxOf(targetX, x - easedStep)
+            }
         }
     }
 

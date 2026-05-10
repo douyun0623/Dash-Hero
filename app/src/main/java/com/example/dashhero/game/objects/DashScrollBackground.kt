@@ -21,6 +21,10 @@ class DashScrollBackground(
         x += speed * gctx.frameTime
     }
 
+    fun scrollBy(distance: Float) {
+        x -= distance
+    }
+
     override fun draw(canvas: Canvas) {
         var curr = x % tileWidth
         if (curr > 0f) curr -= tileWidth

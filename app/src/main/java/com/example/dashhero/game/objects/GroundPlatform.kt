@@ -19,15 +19,24 @@ class GroundPlatform(
     }
     var scrollSpeed = 0f
 
+    fun scrollBy(distance: Float, screenWidth: Float) {
+        x -= distance
+        recycleIfNeeded(screenWidth)
+    }
+
     override fun update(gctx: GameContext) {
         x += scrollSpeed * gctx.frameTime
-        if (x + width / 2f < 0f) {
-            x += gctx.metrics.width + width
-        }
+        recycleIfNeeded(gctx.metrics.width)
     }
 
     override fun draw(canvas: Canvas) {
         bounds.set(x - width / 2f, y - height / 2f, x + width / 2f, y + height / 2f)
         canvas.drawRoundRect(bounds, 24f, 24f, paint)
+    }
+
+    private fun recycleIfNeeded(screenWidth: Float) {
+        if (x + width / 2f < 0f) {
+            x += screenWidth + width
+        }
     }
 }
