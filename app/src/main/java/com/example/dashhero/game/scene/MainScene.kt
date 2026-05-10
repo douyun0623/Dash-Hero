@@ -50,6 +50,15 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
     private val dashTrail = DashTrail()
     private var pendingScrollDistance = 0f
     private var activeTrailStretch = 0f
+    private var totalDistance = 0f
+
+    private val scorePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.YELLOW
+        textAlign = Paint.Align.CENTER
+        textSize = 84f
+        typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        setShadowLayer(5f, 0f, 0f, Color.BLACK)
+    }
 
     init {
         world.add(background, Layer.BG)
@@ -85,6 +94,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         if (scrollStep > 0f) {
             background.scrollBy(scrollStep * BG_SCROLL_RATIO)
             platformManager.scrollBy(scrollStep)
+            totalDistance += scrollStep
         }
 
         if (player.isDashing) {
@@ -132,12 +142,16 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
     override fun draw(canvas: Canvas) {
         world.draw(canvas)
 
+        val distanceInMeters = (totalDistance / 100f).toInt()
+        canvas.drawText("${distanceInMeters}m", gctx.metrics.width / 2f, 200f, scorePaint)
+
         canvas.drawText("Dash Hero", gctx.metrics.width / 2f, 360f, titlePaint)
         
         if (state == State.GAME_OVER) {
             canvas.drawColor(Color.argb(160, 0, 0, 0))
-            canvas.drawText("GAME OVER", gctx.metrics.width / 2f, gctx.metrics.height / 2f, titlePaint)
-            canvas.drawText("Tap to Restart", gctx.metrics.width / 2f, gctx.metrics.height / 2f + 100f, bodyPaint)
+            canvas.drawText("GAME OVER", gctx.metrics.width / 2f, gctx.metrics.height / 2f - 50f, titlePaint)
+            canvas.drawText("Score: ${distanceInMeters}m", gctx.metrics.width / 2f, gctx.metrics.height / 2f + 50f, scorePaint)
+            canvas.drawText("Tap to Restart", gctx.metrics.width / 2f, gctx.metrics.height / 2f + 180f, bodyPaint)
         } else {
             canvas.drawText("MainScene is running with a2dg", gctx.metrics.width / 2f, 430f, bodyPaint)
         }
