@@ -44,6 +44,11 @@ class DashTrail : IGameObject {
         head.set(x, y)
     }
 
+    fun setTail(x: Float, y: Float) {
+        if (state != State.DASHING) return
+        tail.set(x, y)
+    }
+
     fun finish(endX: Float, endY: Float) {
         if (state == State.DASHING) {
             head.set(endX, endY)

@@ -43,6 +43,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
     private val platform = GroundPlatform(450f, 1210f, 640f, 60f)
     private val dashTrail = DashTrail()
     private var pendingScrollDistance = 0f
+    private var activeTrailStretch = 0f
 
     init {
         world.add(background, Layer.BG)
@@ -58,8 +59,8 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         platform.scrollSpeed = 0f
         super.update(gctx)
 
-        val afterPlayerX = player.screenX
-        val returnDistance = (beforePlayerX - afterPlayerX).coerceAtLeast(0f)
+        val attemptedPlayerX = player.screenX
+        val returnDistance = (beforePlayerX - attemptedPlayerX).coerceAtLeast(0f)
         val overflowDistance = player.clampForwardLimit(SCROLL_TRIGGER_X)
         pendingScrollDistance += returnDistance + overflowDistance
 
@@ -69,9 +70,33 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
             platform.scrollBy(scrollStep, gctx.metrics.width)
         }
 
-        dashTrail.setHead(player.screenX, player.screenY)
+        if (player.isDashing) {
+            // 대시 중일 때 스트레치를 목표치(MAX_TRAIL_STRETCH)까지 점진적으로 증가
+            activeTrailStretch = approach(activeTrailStretch, MAX_TRAIL_STRETCH, TRAIL_STRETCH_SPEED * gctx.frameTime)
+        } else {
+            // 대시가 끝나면 스트레치를 서서히 줄여서 꼬리가 머리쪽으로 따라오게 함
+            activeTrailStretch = approach(activeTrailStretch, 0f, TRAIL_STRETCH_SPEED * 1.5f * gctx.frameTime)
+        }
+
+        // Head는 항상 플레이어 위치
+        val trailHeadX = player.screenX
+        // Tail은 플레이어 위치에서 activeTrailStretch만큼 뒤쪽(왼쪽)
+        val trailTailX = trailHeadX - activeTrailStretch
+        
+        dashTrail.setHead(trailHeadX, player.screenY)
+        dashTrail.setTail(trailTailX, player.screenY)
+
         if (wasDashing && !player.isDashing) {
-            dashTrail.finish(player.screenX, player.screenY)
+            // 끝날 때의 Head 위치 고정
+            dashTrail.finish(trailHeadX, player.screenY)
+        }
+    }
+
+    private fun approach(current: Float, target: Float, amount: Float): Float {
+        return if (current < target) {
+            minOf(target, current + amount)
+        } else {
+            maxOf(target, current - amount)
         }
     }
 
@@ -96,7 +121,13 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
-            dashTrail.start(player.screenX, player.screenY)
+            // 대시 시작 시점에 스트레치를 0에서 시작하여 '개기지' 않게 함
+            if (!player.isDashing) {
+                activeTrailStretch = 0f
+            }
+            
+            // 꼬리 위치를 플레이어 현재 위치에서 시작 (0에서부터 뻗어나감)
+            dashTrail.start(player.screenX - activeTrailStretch, player.screenY)
             player.dash()
             return true
         }
@@ -110,5 +141,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         private const val SCROLL_EASE = 12f
         private const val SCROLL_MIN_SPEED = 180f
         private const val SCROLL_MAX_SPEED = 2400f
+        private const val MAX_TRAIL_STRETCH = 300f
+        private const val TRAIL_STRETCH_SPEED = 1800f
     }
 }
