@@ -1,9 +1,9 @@
 package com.example.dashhero.game.objects
 
-import android.graphics.BlurMaskFilter
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.PointF
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IGameObject
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
@@ -23,24 +23,11 @@ class DashTrail : IGameObject {
     private var alphaScale = 0f
     private var widthScale = 0f
     private var emissiveScale = 0f
-
-    private val glowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.rgb(70, 220, 255)
-        strokeCap = Paint.Cap.ROUND
-        style = Paint.Style.STROKE
-        maskFilter = BlurMaskFilter(24f, BlurMaskFilter.Blur.NORMAL)
-    }
+    private val ribbonPath = Path()
 
     private val ribbonPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.rgb(45, 170, 255)
-        strokeCap = Paint.Cap.ROUND
-        style = Paint.Style.STROKE
-    }
-
-    private val corePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.WHITE
-        strokeCap = Paint.Cap.ROUND
-        style = Paint.Style.STROKE
+        color = Color.rgb(255, 110, 70)
+        style = Paint.Style.FILL
     }
 
     fun start(x: Float, y: Float) {
@@ -97,21 +84,27 @@ class DashTrail : IGameObject {
     override fun draw(canvas: Canvas) {
         if (state == State.HIDDEN || alphaScale <= 0f || trailLength() < 2f) return
 
-        drawSegment(canvas, glowPaint, GLOW_WIDTH, 90, emissiveScale)
-        drawSegment(canvas, ribbonPaint, RIBBON_WIDTH, 170, alphaScale)
-        drawSegment(canvas, corePaint, CORE_WIDTH, 210, alphaScale)
+        drawFlagTrail(canvas)
     }
 
-    private fun drawSegment(
-        canvas: Canvas,
-        paint: Paint,
-        baseWidth: Float,
-        baseAlpha: Int,
-        intensity: Float,
-    ) {
-        paint.strokeWidth = baseWidth * widthScale
-        paint.alpha = (baseAlpha * intensity).toInt().coerceIn(0, 255)
-        canvas.drawLine(tail.x, tail.y, head.x, head.y, paint)
+    private fun drawFlagTrail(canvas: Canvas) {
+        val length = trailLength()
+        val dx = (head.x - tail.x) / length
+        val dy = (head.y - tail.y) / length
+        val normalX = -dy
+        val normalY = dx
+        val tailHalfWidth = FLAG_HEAD_WIDTH * TAIL_WIDTH_RATIO * widthScale / 2f
+        val headHalfWidth = FLAG_HEAD_WIDTH * widthScale / 2f
+
+        ribbonPath.reset()
+        ribbonPath.moveTo(tail.x + normalX * tailHalfWidth, tail.y + normalY * tailHalfWidth)
+        ribbonPath.lineTo(head.x + normalX * headHalfWidth, head.y + normalY * headHalfWidth)
+        ribbonPath.lineTo(head.x - normalX * headHalfWidth, head.y - normalY * headHalfWidth)
+        ribbonPath.lineTo(tail.x - normalX * tailHalfWidth, tail.y - normalY * tailHalfWidth)
+        ribbonPath.close()
+
+        ribbonPaint.alpha = (190 * alphaScale).toInt().coerceIn(0, 255)
+        canvas.drawPath(ribbonPath, ribbonPaint)
     }
 
     private fun trailLength(): Float {
@@ -131,9 +124,8 @@ class DashTrail : IGameObject {
     }
 
     companion object {
-        private const val GLOW_WIDTH = 46f
-        private const val RIBBON_WIDTH = 24f
-        private const val CORE_WIDTH = 7f
+        private const val FLAG_HEAD_WIDTH = 55f
+        private const val TAIL_WIDTH_RATIO = 0.1f
         private const val TRAIL_APPEAR_SPEED = 12f
         private const val TRAIL_RETRACT_EASE = 9f
         private const val MIN_TRAIL_LENGTH = 8f
