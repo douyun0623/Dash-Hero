@@ -41,6 +41,8 @@ class Player(
         get() = ((x - baseX) / dashLeadX).coerceIn(0f, 1f)
     val screenX: Float
         get() = x
+    val screenY: Float
+        get() = y
 
     fun dash() {
         dashTimeLeft = dashDuration
