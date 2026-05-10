@@ -21,7 +21,7 @@ class Player(
     private val height = 140f
 
     private val gravity = 2400f
-    private val jumpVelocity = -980f
+    private val jumpVelocity = -1200f
     private val dashDuration = 0.24f
     private val baseX = x
     private val dashLeadX = 620f
@@ -123,6 +123,11 @@ class Player(
                 x = maxOf(targetX, x - easedStep)
             }
         }
+    }
+
+    fun getBoundingBox(): RectF {
+        bounds.set(x - width / 2f, y - height / 2f, x + width / 2f, y + height / 2f)
+        return bounds
     }
 
     override fun draw(canvas: Canvas) {

@@ -3,6 +3,7 @@ package com.example.dashhero.game.scene
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.RectF
 import android.graphics.Typeface
 import android.view.MotionEvent
 import com.example.dashhero.R
@@ -77,8 +78,21 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         // world.update 대신 수동 업데이트를 통해 인자 전달
         background.update(gctx)
         platformManager.update(gctx)
+        platformManager.updateEnemies(gctx)
         dashTrail.update(gctx)
         player.updateWithCollision(gctx, platformManager)
+
+        // 적과의 충돌 판정
+        val playerBB = player.getBoundingBox()
+        for (enemy in platformManager.getEnemies()) {
+            if (enemy.isAlive && RectF.intersects(playerBB, enemy.getBoundingBox())) {
+                if (player.isDashing) {
+                    enemy.die()
+                } else {
+                    state = State.GAME_OVER
+                }
+            }
+        }
 
         // 게임 오버 체크: 플레이어가 화면 아래로 추락
         if (player.screenY > 1600f) {
