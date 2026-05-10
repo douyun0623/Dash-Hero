@@ -8,7 +8,7 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IGameObject
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 
 class GroundPlatform(
-    private val x: Float,
+    private var x: Float,
     private val y: Float,
     private val width: Float,
     private val height: Float,
@@ -17,8 +17,13 @@ class GroundPlatform(
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.rgb(80, 180, 120)
     }
+    var scrollSpeed = 0f
 
     override fun update(gctx: GameContext) {
+        x += scrollSpeed * gctx.frameTime
+        if (x + width / 2f < 0f) {
+            x += gctx.metrics.width + width
+        }
     }
 
     override fun draw(canvas: Canvas) {

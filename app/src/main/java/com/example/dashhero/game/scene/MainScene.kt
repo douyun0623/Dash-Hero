@@ -6,9 +6,9 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.view.MotionEvent
 import com.example.dashhero.R
+import com.example.dashhero.game.objects.DashScrollBackground
 import com.example.dashhero.game.objects.GroundPlatform
 import com.example.dashhero.game.objects.Player
-import kr.ac.tukorea.ge.spgp2026.a2dg.objects.HorzScrollBackground
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.Scene
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.World
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
@@ -37,11 +37,23 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
     }
 
     private val player = Player(180f, 1110f)
+    private val background = DashScrollBackground(gctx, R.drawable.bg_dash_city, BASE_BG_SPEED)
+    private val platform = GroundPlatform(450f, 1210f, 640f, 60f)
+    private var scrollSpeed = BASE_SCROLL_SPEED
 
     init {
-        world.add(HorzScrollBackground(gctx, R.drawable.bg_dash_city, -120f), Layer.BG)
-        world.add(GroundPlatform(450f, 1210f, 640f, 60f), Layer.PLATFORM)
+        world.add(background, Layer.BG)
+        world.add(platform, Layer.PLATFORM)
         world.add(player, Layer.PLAYER)
+    }
+
+    override fun update(gctx: GameContext) {
+        val targetScrollSpeed = if (player.isDashing) DASH_SCROLL_SPEED else BASE_SCROLL_SPEED
+        scrollSpeed += (targetScrollSpeed - scrollSpeed) * SCROLL_ACCELERATION
+
+        background.speed = scrollSpeed * BG_SPEED_RATIO
+        platform.scrollSpeed = scrollSpeed
+        super.update(gctx)
     }
 
     override fun draw(canvas: Canvas) {
@@ -57,5 +69,13 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
             return true
         }
         return false
+    }
+
+    companion object {
+        private const val BASE_SCROLL_SPEED = -80f
+        private const val DASH_SCROLL_SPEED = -760f
+        private const val BG_SPEED_RATIO = 0.7f
+        private const val BASE_BG_SPEED = BASE_SCROLL_SPEED * BG_SPEED_RATIO
+        private const val SCROLL_ACCELERATION = 0.18f
     }
 }

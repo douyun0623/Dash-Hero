@@ -22,50 +22,75 @@ class Player(
     private val groundY = 1110f
     private val gravity = 2400f
     private val jumpVelocity = -980f
-    private val dashSpeed = 1150f
-    private val dashDuration = 0.32f
-    private val dashCooldown = 0.18f
+    private val dashDuration = 0.24f
+    private val baseX = x
+    private val dashLeadX = 310f
+    private val returnSpeed = 1500f
+    private val crouchDuration = 0.16f
 
-    private var velocityY = jumpVelocity
+    private var velocityY = 0f
+    private var crouchTimeLeft = crouchDuration
     private var dashTimeLeft = 0f
-    private var dashCooldownLeft = 0f
+    private var dashLockedY = y
+    val isDashing: Boolean
+        get() = dashTimeLeft > 0f
 
     fun dash() {
-        if (dashCooldownLeft > 0f) return
         dashTimeLeft = dashDuration
-        dashCooldownLeft = dashDuration + dashCooldown
+        dashLockedY = y
+        velocityY = 0f
     }
 
     override fun update(gctx: GameContext) {
         val dt = gctx.frameTime
 
-        velocityY += gravity * dt
-        y += velocityY * dt
-
-        if (y >= groundY) {
-            y = groundY
-            velocityY = jumpVelocity
-        }
-
-        if (dashTimeLeft > 0f) {
-            x += dashSpeed * dt
+        if (isDashing) {
+            y = dashLockedY
             dashTimeLeft -= dt
-        }
-        if (dashCooldownLeft > 0f) {
-            dashCooldownLeft -= dt
+            if (dashTimeLeft <= 0f) {
+                dashTimeLeft = 0f
+                velocityY = 0f
+            }
+        } else if (crouchTimeLeft > 0f) {
+            y = groundY
+            velocityY = 0f
+            crouchTimeLeft -= dt
+            if (crouchTimeLeft <= 0f) {
+                crouchTimeLeft = 0f
+                velocityY = jumpVelocity
+            }
+        } else {
+            velocityY += gravity * dt
+            y += velocityY * dt
+
+            if (y >= groundY) {
+                y = groundY
+                velocityY = 0f
+                crouchTimeLeft = crouchDuration
+            }
         }
 
-        val halfWidth = width / 2f
-        x = x.coerceIn(halfWidth, gctx.metrics.width - halfWidth)
+        val targetX = if (isDashing) baseX + dashLeadX else baseX
+        if (x < targetX) {
+            x = minOf(targetX, x + returnSpeed * dt)
+        } else if (x > targetX) {
+            x = maxOf(targetX, x - returnSpeed * dt)
+        }
     }
 
     override fun draw(canvas: Canvas) {
-        paint.color = if (dashTimeLeft > 0f) {
+        val isCrouching = !isDashing && crouchTimeLeft > 0f
+        paint.color = if (isDashing) {
             Color.rgb(255, 110, 70)
+        } else if (isCrouching) {
+            Color.rgb(255, 225, 95)
         } else {
             Color.rgb(255, 205, 80)
         }
-        bounds.set(x - width / 2f, y - height / 2f, x + width / 2f, y + height / 2f)
+
+        val drawWidth = if (isCrouching) width * 1.18f else width
+        val drawHeight = if (isCrouching) height * 0.76f else height
+        bounds.set(x - drawWidth / 2f, y - drawHeight / 2f, x + drawWidth / 2f, y + drawHeight / 2f)
         canvas.drawRoundRect(bounds, 32f, 32f, paint)
     }
 }
