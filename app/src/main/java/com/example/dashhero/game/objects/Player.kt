@@ -18,15 +18,54 @@ class Player(
 
     private val width = 140f
     private val height = 140f
-    private var elapsedTime = 0f
+
+    private val groundY = 1110f
+    private val gravity = 2400f
+    private val jumpVelocity = -980f
+    private val dashSpeed = 1150f
+    private val dashDuration = 0.32f
+    private val dashCooldown = 0.18f
+
+    private var velocityY = jumpVelocity
+    private var dashTimeLeft = 0f
+    private var dashCooldownLeft = 0f
+
+    fun dash() {
+        if (dashCooldownLeft > 0f) return
+        dashTimeLeft = dashDuration
+        dashCooldownLeft = dashDuration + dashCooldown
+    }
 
     override fun update(gctx: GameContext) {
-        elapsedTime += gctx.frameTime
+        val dt = gctx.frameTime
+
+        velocityY += gravity * dt
+        y += velocityY * dt
+
+        if (y >= groundY) {
+            y = groundY
+            velocityY = jumpVelocity
+        }
+
+        if (dashTimeLeft > 0f) {
+            x += dashSpeed * dt
+            dashTimeLeft -= dt
+        }
+        if (dashCooldownLeft > 0f) {
+            dashCooldownLeft -= dt
+        }
+
+        val halfWidth = width / 2f
+        x = x.coerceIn(halfWidth, gctx.metrics.width - halfWidth)
     }
 
     override fun draw(canvas: Canvas) {
-        val bobY = y + kotlin.math.sin(elapsedTime * 4f) * 8f
-        bounds.set(x - width / 2f, bobY - height / 2f, x + width / 2f, bobY + height / 2f)
+        paint.color = if (dashTimeLeft > 0f) {
+            Color.rgb(255, 110, 70)
+        } else {
+            Color.rgb(255, 205, 80)
+        }
+        bounds.set(x - width / 2f, y - height / 2f, x + width / 2f, y + height / 2f)
         canvas.drawRoundRect(bounds, 32f, 32f, paint)
     }
 }

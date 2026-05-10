@@ -4,6 +4,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
+import android.view.MotionEvent
 import com.example.dashhero.game.objects.GroundPlatform
 import com.example.dashhero.game.objects.Player
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.Scene
@@ -32,9 +33,11 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         textSize = 34f
     }
 
+    private val player = Player(180f, 1110f)
+
     init {
         world.add(GroundPlatform(450f, 1210f, 640f, 60f), Layer.PLATFORM)
-        world.add(Player(450f, 1070f), Layer.PLAYER)
+        world.add(player, Layer.PLAYER)
     }
 
     override fun draw(canvas: Canvas) {
@@ -43,5 +46,13 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
 
         canvas.drawText("Dash Hero", gctx.metrics.width / 2f, 360f, titlePaint)
         canvas.drawText("MainScene is running with a2dg", gctx.metrics.width / 2f, 430f, bodyPaint)
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            player.dash()
+            return true
+        }
+        return false
     }
 }
