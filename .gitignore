@@ -14,3 +14,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+.memoc/.pending
+.memoc/local/

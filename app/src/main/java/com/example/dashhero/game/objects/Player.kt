@@ -5,13 +5,14 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import com.example.dashhero.game.objects.PlatformManager
+import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IBoxCollidable
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IGameObject
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 
 class Player(
     private var x: Float,
     private var y: Float,
-) : IGameObject {
+) : IGameObject, IBoxCollidable {
     private val bounds = RectF()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.rgb(255, 205, 80)
@@ -37,6 +38,8 @@ class Player(
     private var dashLockedY = y
     val isDashing: Boolean
         get() = dashTimeLeft > 0f
+    val isReturning: Boolean
+        get() = !isDashing && x > baseX + 2f
     val dashForwardRatio: Float
         get() = ((x - baseX) / dashLeadX).coerceIn(0f, 1f)
     val screenX: Float
@@ -137,12 +140,17 @@ class Player(
         return bounds
     }
 
+    override val collisionRect: RectF
+        get() = getBoundingBox()
+
     override fun draw(canvas: Canvas) {
         val isCrouching = !isDashing && crouchTimeLeft > 0f
         paint.color = if (isDashing) {
             Color.rgb(255, 110, 70)
         } else if (isCrouching) {
             Color.rgb(255, 225, 95)
+        } else if (isReturning) {
+            Color.argb(160, 255, 205, 80) // 복귀 중일 때는 반투명한 노란색
         } else {
             Color.rgb(255, 205, 80)
         }

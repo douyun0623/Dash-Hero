@@ -11,6 +11,7 @@ import com.example.dashhero.game.objects.DashScrollBackground
 import com.example.dashhero.game.objects.DashTrail
 import com.example.dashhero.game.objects.PlatformManager
 import com.example.dashhero.game.objects.Player
+import kr.ac.tukorea.ge.spgp2026.a2dg.objects.collidesWith
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.Scene
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.World
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
@@ -83,20 +84,35 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         player.updateWithCollision(gctx, platformManager)
 
         // 적과의 충돌 판정
+        val dt = gctx.frameTime
         val playerBB = player.getBoundingBox()
         for (enemy in platformManager.getEnemies()) {
-            if (enemy.isAlive && RectF.intersects(playerBB, enemy.getBoundingBox())) {
+            if (enemy.isAlive && player.collidesWith(enemy)) {
                 val enemyBB = enemy.getBoundingBox()
                 
                 if (player.isDashing) {
                     // 1. 대시 공격 (처치)
                     enemy.die()
-                } else if (player.currentVelocityY > 0 && playerBB.bottom <= enemyBB.top + 40f) {
-                    // 2. 밟기 판정: 하강 중이고 발바닥이 적 머리 근처일 때
-                    player.bounce()
                 } else {
-                    // 3. 일반 충돌 (사망)
-                    state = State.GAME_OVER
+                    val overlapX = minOf(playerBB.right, enemyBB.right) - maxOf(playerBB.left, enemyBB.left)
+                    val overlapY = minOf(playerBB.bottom, enemyBB.bottom) - maxOf(playerBB.top, enemyBB.top)
+                    
+                    val prevPlayerBottom = playerBB.bottom - player.currentVelocityY * dt
+                    val prevEnemyTop = enemyBB.top - enemy.currentVelocityY * dt
+                    
+                    val wasAbove = prevPlayerBottom <= prevEnemyTop + 15f
+                    val isFallingRelative = (player.currentVelocityY - enemy.currentVelocityY) > -100f
+                    
+                    if (isFallingRelative && (wasAbove || (overlapY < overlapX * 1.5f && playerBB.bottom <= enemyBB.centerY()))) {
+                        // 2. 밟기 판정: 위에서 아래로 충돌했거나 밟기 영역 내일 때
+                        player.bounce()
+                    } else if (player.isReturning) {
+                        // 3. 복귀 중일 때는 옆면 충돌 무시 (반투명 패스스루)
+                        // 아무 작업도 하지 않음 (pass through)
+                    } else {
+                        // 4. 일반 충돌 (사망)
+                        state = State.GAME_OVER
+                    }
                 }
             }
         }

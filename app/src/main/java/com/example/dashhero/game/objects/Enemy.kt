@@ -4,6 +4,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
+import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IBoxCollidable
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IGameObject
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 import kotlin.math.cos
@@ -12,7 +13,7 @@ import kotlin.math.sin
 class Enemy(
     var x: Float,
     var y: Float,
-) : IGameObject {
+) : IGameObject, IBoxCollidable {
     enum class State {
         ALIVE, DEAD
     }
@@ -36,6 +37,7 @@ class Enemy(
     private var rotationSpeed = 0f
 
     val isAlive: Boolean get() = state == State.ALIVE
+    val currentVelocityY: Float get() = velocityY
 
     fun die() {
         if (state == State.DEAD) return
@@ -125,4 +127,7 @@ class Enemy(
         bounds.set(x - width / 2f, y - height / 2f, x + width / 2f, y + height / 2f)
         return bounds
     }
+
+    override val collisionRect: RectF
+        get() = getBoundingBox()
 }
