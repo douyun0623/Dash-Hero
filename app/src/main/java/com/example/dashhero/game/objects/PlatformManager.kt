@@ -12,9 +12,18 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
     private val platformHeight = 60f
     private val platformY = 1210f
     
-    // 맵 데이터: X는 땅, -는 빈 공간
-    private val mapData = "XXXXXXXXXX---XXXXX---XXXXXXXXXX---XXXX----XXXXXX"
-    private var mapIndex = 0
+    // 다양한 발판 패턴 프리셋 정의
+    private val patternPresets = listOf(
+        "XXXXXXXXXX", // 평탄한 안전지대
+        "XXXX---XXX", // 기본 낙사 구간
+        "XX-X-X-XX",  // 징검다리 구간
+        "XXXHHHXXX",  // 고지대 언덕 구간
+        "XXLL-HHXX",  // 큰 고저차 및 낙사 조합
+        "X-H-L-H-X",  // 엇박자 공중 발판 구간
+        "XX-HH-L-XX"  // 복합 장애물 구간
+    )
+    private var currentPattern = "XXXXXXXXXX" // 첫 패턴은 안전지대로 시작
+    private var patternIndex = 0
     private var spawnCount = 0 // 생성된 총 발판/슬롯 수
 
     init {
@@ -25,20 +34,34 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
     }
 
     private fun spawnNext() {
-        val char = mapData[mapIndex]
-        if (char == 'X') {
-            // 발판 생성. GroundPlatform의 중심 좌표 x를 계산
+        if (patternIndex >= currentPattern.length) {
+            // 새 패턴 조각 무작위 선택
+            currentPattern = patternPresets.random()
+            patternIndex = 0
+        }
+
+        val char = currentPattern[patternIndex]
+        if (char != '-') {
+            // 기호에 따라 발판 높낮이 계산
+            val heightOffset = when (char) {
+                'H' -> -150f // 고지대
+                'L' -> 120f  // 저지대
+                else -> 0f   // 평지 ('X')
+            }
+            val targetY = platformY + heightOffset
             val centerX = lastX + unitWidth / 2f
-            platforms.add(GroundPlatform(centerX, platformY, unitWidth + 2f, platformHeight)) // 이음새 방지를 위해 +2f
+            platforms.add(GroundPlatform(centerX, targetY, unitWidth + 2f, platformHeight)) // 이음새 방지를 위해 +2f
             
-            // 초기 5개 슬롯 이후부터 30% 확률로 적 스폰
-            if (spawnCount > 5 && Math.random() < 0.3) {
-                enemies.add(Enemy(centerX, platformY - 200f))
+            // 초기 5개 슬롯 이후부터 적 스폰
+            // 고지대('H')에서는 조금 더 높은 확률(40%)로 적 배치
+            val spawnChance = if (char == 'H') 0.4 else 0.3
+            if (spawnCount > 5 && Math.random() < spawnChance) {
+                enemies.add(Enemy(centerX, targetY - 200f))
             }
         }
         
         lastX += unitWidth
-        mapIndex = (mapIndex + 1) % mapData.length
+        patternIndex++
         spawnCount++
     }
 
