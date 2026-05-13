@@ -102,3 +102,36 @@ History: worklog. Resume risks: 04-handoff.md.
 
 ## Resume
 - Proceed with Task 2: Audio integration.
+
+## [2026-06-13T04:43:27] archived summary (805B)
+
+---
+memoc: true
+type: state
+scope: project-memory
+created: 2026-06-13T04:41:49
+updated: 2026-06-13T04:41:49
+status: active
+tags:
+  - memoc
+  - memoc/state
+---
+# Session Summary
+Last: 2026-06-13T04:41:49
+Replace, do not append. Keep <800B.
+History: worklog. Resume risks: 04-handoff.md.
+
+## Status
+- Low-latency sound effects are fully integrated into the gameplay loop (Jump, Dash, Stomp, Game Over).
+- Audible retro-style wave assets generated locally.
+
+## Changed
+- Generated 4 WAV files under `app/src/main/res/raw/`.
+- Created `SoundEffects` using `SoundPool` initialized in `MainActivity.kt`.
+- Registered audio playback triggers in `Player.kt` and `MainScene.kt`.
+
+## Open Tasks
+- [ ] Enhance visual hit effects / screen shake (Task 3).
+
+## Resume
+- Proceed with Task 3: Visual effects integration.

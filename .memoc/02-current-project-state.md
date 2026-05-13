@@ -21,7 +21,7 @@ Last synced: 2026-06-13T03:02:05
 ## Project Snapshot
 
 <!-- memoc:snapshot:start -->
-- Last synced: 2026-06-13T04:41:49
+- Last synced: 2026-06-13T04:44:59
 - Detected stack: Not detected
 
 ### Config Files
@@ -44,7 +44,7 @@ Last synced: 2026-06-13T03:02:05
 
 - [x] Stabilize collision detection (lateral vs. vertical stomp collision).
 - [x] Add more platforms and obstacle patterns to `PlatformManager`.
-- [ ] Implement audio feedback / sound effects interface.
+- [x] Implement audio feedback / sound effects interface.
 
 ## Completed Tasks
 

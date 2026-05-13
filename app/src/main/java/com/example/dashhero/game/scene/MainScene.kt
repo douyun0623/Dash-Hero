@@ -9,8 +9,10 @@ import android.view.MotionEvent
 import com.example.dashhero.R
 import com.example.dashhero.game.objects.DashScrollBackground
 import com.example.dashhero.game.objects.DashTrail
+import com.example.dashhero.game.objects.ParticleSystem
 import com.example.dashhero.game.objects.PlatformManager
 import com.example.dashhero.game.objects.Player
+import com.example.dashhero.game.sound.SoundEffects
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.collidesWith
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.Scene
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.World
@@ -50,6 +52,9 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
     private val background = DashScrollBackground(gctx, R.drawable.bg_dash_city, BASE_BG_SPEED)
     private val platformManager = PlatformManager(gctx.metrics.width)
     private val dashTrail = DashTrail()
+    private val particleSystem = ParticleSystem()
+    private var shakeTimeLeft = 0f
+    private var shakeIntensity = 0f
     private var pendingScrollDistance = 0f
     private var activeTrailStretch = 0f
     private var totalDistance = 0f
@@ -67,10 +72,18 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         world.add(platformManager, Layer.PLATFORM)
         world.add(dashTrail, Layer.TRAIL)
         world.add(player, Layer.PLAYER)
+        world.add(particleSystem, Layer.PLAYER)
     }
 
     override fun update(gctx: GameContext) {
         if (state == State.GAME_OVER) return
+
+        if (shakeTimeLeft > 0f) {
+            shakeTimeLeft -= gctx.frameTime
+            if (shakeTimeLeft <= 0f) {
+                shakeTimeLeft = 0f
+            }
+        }
 
         val beforePlayerX = player.screenX
         val wasDashing = player.isDashing
@@ -80,6 +93,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         background.update(gctx)
         platformManager.update(gctx)
         platformManager.updateEnemies(gctx)
+        particleSystem.update(gctx)
         dashTrail.update(gctx)
         player.updateWithCollision(gctx, platformManager)
 
@@ -93,6 +107,14 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
                 if (player.isDashing) {
                     // 1. 대시 공격 (처치)
                     enemy.die()
+                    // 대시 타격 파티클 스폰 (주황색 & 보라색)
+                    particleSystem.spawnExplosion(
+                        enemy.x, enemy.y,
+                        intArrayOf(Color.rgb(255, 110, 70), Color.rgb(120, 80, 200)),
+                        25
+                    )
+                    // 대시 타격 화면 흔들림
+                    triggerShake(0.18f, 22f)
                 } else {
                     val overlapX = minOf(playerBB.right, enemyBB.right) - maxOf(playerBB.left, enemyBB.left)
                     val overlapY = minOf(playerBB.bottom, enemyBB.bottom) - maxOf(playerBB.top, enemyBB.top)
@@ -106,12 +128,21 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
                     if (isFallingRelative && (wasAbove || (overlapY < overlapX * 1.5f && playerBB.bottom <= enemyBB.centerY()))) {
                         // 2. 밟기 판정: 위에서 아래로 충돌했거나 밟기 영역 내일 때
                         player.bounce()
+                        SoundEffects.playStomp()
+                        // 밟기 파티클 스폰 (연한 노란색 & 보라색)
+                        particleSystem.spawnExplosion(
+                            enemy.x, enemyBB.top,
+                            intArrayOf(Color.rgb(255, 225, 95), Color.rgb(120, 80, 200)),
+                            15
+                        )
+                        // 밟기 화면 흔들림
+                        triggerShake(0.12f, 10f)
                     } else if (player.isReturning) {
                         // 3. 복귀 중일 때는 옆면 충돌 무시 (반투명 패스스루)
                         // 아무 작업도 하지 않음 (pass through)
                     } else {
                         // 4. 일반 충돌 (사망)
-                        state = State.GAME_OVER
+                        triggerGameOver()
                     }
                 }
             }
@@ -119,7 +150,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
 
         // 게임 오버 체크: 플레이어가 화면 아래로 추락
         if (player.screenY > 1600f) {
-            state = State.GAME_OVER
+            triggerGameOver()
         }
 
         val attemptedPlayerX = player.screenX
@@ -131,6 +162,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         if (scrollStep > 0f) {
             background.scrollBy(scrollStep * BG_SCROLL_RATIO)
             platformManager.scrollBy(scrollStep)
+            particleSystem.scrollBy(scrollStep)
             totalDistance += scrollStep
         }
 
@@ -177,7 +209,14 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
     }
 
     override fun draw(canvas: Canvas) {
+        canvas.save()
+        if (shakeTimeLeft > 0f) {
+            val dx = (Math.random().toFloat() * 2f - 1f) * shakeIntensity
+            val dy = (Math.random().toFloat() * 2f - 1f) * shakeIntensity
+            canvas.translate(dx, dy)
+        }
         world.draw(canvas)
+        canvas.restore()
 
         val distanceInMeters = (totalDistance / 100f).toInt()
         canvas.drawText("${distanceInMeters}m", gctx.metrics.width / 2f, 200f, scorePaint)
@@ -192,6 +231,18 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         } else {
             canvas.drawText("MainScene is running with a2dg", gctx.metrics.width / 2f, 430f, bodyPaint)
         }
+    }
+
+    private fun triggerGameOver() {
+        if (state == State.GAME_OVER) return
+        state = State.GAME_OVER
+        SoundEffects.playGameOver()
+        triggerShake(0.4f, 28f)
+    }
+
+    private fun triggerShake(duration: Float, intensity: Float) {
+        shakeTimeLeft = duration
+        shakeIntensity = intensity
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
