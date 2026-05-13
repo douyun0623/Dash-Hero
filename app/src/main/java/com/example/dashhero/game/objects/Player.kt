@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import com.example.dashhero.game.objects.PlatformManager
+import com.example.dashhero.game.sound.SoundEffects
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IBoxCollidable
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.IGameObject
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
@@ -53,6 +54,7 @@ class Player(
         dashTimeLeft = dashDuration
         dashLockedY = y
         velocityY = 0f
+        SoundEffects.playDash()
     }
 
     fun bounce() {
@@ -98,6 +100,7 @@ class Player(
                 if (crouchTimeLeft <= 0f) {
                     crouchTimeLeft = 0f
                     velocityY = jumpVelocity
+                    SoundEffects.playJump()
                 }
             } else {
                 // 발판이 없으면 웅크리기 무시하고 추락
