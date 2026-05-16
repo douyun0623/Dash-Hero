@@ -11,6 +11,7 @@ object SoundEffects {
     private var sndDashId = 0
     private var sndStompId = 0
     private var sndGameOverId = 0
+    private var sndCollectId = 0
 
     fun init(context: Context) {
         if (soundPool != null) return
@@ -30,6 +31,7 @@ object SoundEffects {
             sndDashId = pool.load(context, R.raw.snd_dash, 1)
             sndStompId = pool.load(context, R.raw.snd_stomp, 1)
             sndGameOverId = pool.load(context, R.raw.snd_gameover, 1)
+            sndCollectId = pool.load(context, R.raw.snd_collect, 1)
         }
     }
 
@@ -47,6 +49,10 @@ object SoundEffects {
 
     fun playGameOver() {
         soundPool?.play(sndGameOverId, 1f, 1f, 2, 0, 1f)
+    }
+
+    fun playCollect() {
+        soundPool?.play(sndCollectId, 1f, 1f, 1, 0, 1f)
     }
 
     fun release() {

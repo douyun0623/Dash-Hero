@@ -7,6 +7,7 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 class PlatformManager(private val screenWidth: Float) : IGameObject {
     private val platforms = mutableListOf<GroundPlatform>()
     private val enemies = mutableListOf<Enemy>()
+    private val batteries = mutableListOf<Battery>()
     private var lastX = 0f
     private val unitWidth = 200f
     private val platformHeight = 60f
@@ -55,8 +56,14 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
             // 초기 5개 슬롯 이후부터 적 스폰
             // 고지대('H')에서는 조금 더 높은 확률(40%)로 적 배치
             val spawnChance = if (char == 'H') 0.4 else 0.3
-            if (spawnCount > 5 && Math.random() < spawnChance) {
+            val enemySpawned = spawnCount > 5 && Math.random() < spawnChance
+            if (enemySpawned) {
                 enemies.add(Enemy(centerX, targetY - 200f))
+            } else {
+                // 적이 없을 때 35% 확률로 배터리 배치
+                if (spawnCount > 2 && Math.random() < 0.35) {
+                    batteries.add(Battery(centerX, targetY - 140f))
+                }
             }
         }
         
@@ -77,6 +84,7 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
         lastX -= distance
         platforms.forEach { it.scrollBy(distance) }
         enemies.forEach { it.scrollBy(distance) }
+        batteries.forEach { it.scrollBy(distance) }
         
         // 부족한 발판 보충
         while (lastX < screenWidth * 1.5f) {
@@ -86,6 +94,7 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
         // 화면 밖 발판 정리
         platforms.removeAll { it.isOffScreen() }
         enemies.removeAll { it.isOffScreen() }
+        batteries.removeAll { it.isOffScreen() || !it.isAlive }
     }
 
     fun updateEnemies(gctx: GameContext) {
@@ -93,15 +102,18 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
     }
     
     fun getEnemies(): List<Enemy> = enemies
+    fun getBatteries(): List<Battery> = batteries
 
     override fun update(gctx: GameContext) {
         // PlatformManager 자체의 update에서는 스크롤 처리를 MainScene에서 scrollBy로 호출하므로 
         // 개별 발판의 update(자체 이동 등)가 필요하다면 호출
         platforms.forEach { it.update(gctx) }
+        batteries.forEach { it.update(gctx) }
     }
 
     override fun draw(canvas: Canvas) {
         platforms.forEach { it.draw(canvas) }
+        batteries.forEach { it.draw(canvas) }
         enemies.forEach { it.draw(canvas) }
     }
 }

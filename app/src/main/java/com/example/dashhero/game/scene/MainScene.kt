@@ -108,6 +108,16 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         dashTrail.update(gctx)
         player.updateWithCollision(gctx, platformManager)
 
+        // 배터리 아이템과의 충돌 판정
+        for (battery in platformManager.getBatteries()) {
+            if (battery.isAlive && player.collidesWith(battery)) {
+                battery.collect()
+                SoundEffects.playCollect()
+                // 배터리 획득 시 보너스 거리 제공 (+10m)
+                totalDistance += 1000f
+            }
+        }
+
         // 적과의 충돌 판정
         val dt = gctx.frameTime
         val playerBB = player.getBoundingBox()

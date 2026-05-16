@@ -2,8 +2,8 @@
 memoc: true
 type: worklog
 scope: project-memory
-created: 2026-06-13T05:00:43
-updated: 2026-06-13T05:00:43
+created: 2026-06-13T05:01:31
+updated: 2026-06-13T05:01:31
 status: active
 tags:
   - memoc
@@ -13,7 +13,7 @@ tags:
 
 Generated index of conflict-light per-actor work records.
 
-Last generated: 2026-06-13T05:00:43
+Last generated: 2026-06-13T05:01:31
 
 ## Layout
 
@@ -28,6 +28,7 @@ worklog/<actor>/YYYY-MM/YYYYMMDDTHHMM-title.md
 
 ## Recent Work
 
+- [Implement collectible Battery item and playCollect audio feedback](douyun0623/2026-06/20260613T0501-implement-collectible-battery-item-and-playcollect-audio-feedback.md) — douyun0623 active.
 - [Implement transparent Pause overlay scene and Pause system](douyun0623/2026-06/20260613T0500-implement-transparent-pause-overlay-scene-and-pause-system.md) — douyun0623 active.
 - [Implement TitleScene and HighScoreManager](douyun0623/2026-06/20260613T0459-implement-titlescene-and-highscoremanager.md) — douyun0623 active.
 - [Balance player jump height and platform height offsets](douyun0623/2026-06/20260613T0451-balance-player-jump-height-and-platform-height-offsets.md) — douyun0623 active.
