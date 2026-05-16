@@ -10,6 +10,13 @@ class SceneStack(private val gctx: GameContext) {
     val top: Scene?
         get() = scenes.lastOrNull()
 
+    fun getPreviousScene(): Scene? {
+        if (scenes.size >= 2) {
+            return scenes[scenes.size - 2]
+        }
+        return null
+    }
+
     val size: Int
         get() = scenes.size
 

@@ -13,6 +13,7 @@ import com.example.dashhero.game.objects.ParticleSystem
 import com.example.dashhero.game.objects.PlatformManager
 import com.example.dashhero.game.objects.Player
 import com.example.dashhero.game.sound.SoundEffects
+import com.example.dashhero.game.util.HighScoreManager
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.collidesWith
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.Scene
 import kr.ac.tukorea.ge.spgp2026.a2dg.scene.World
@@ -65,6 +66,16 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         textSize = 84f
         typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
         setShadowLayer(5f, 0f, 0f, Color.BLACK)
+    }
+
+    private val pauseBtnRect = RectF()
+    private val pauseBtnPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.argb(160, 255, 255, 255)
+        style = Paint.Style.FILL
+    }
+    private val pauseSymbolPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.BLACK
+        style = Paint.Style.FILL
     }
 
     init {
@@ -226,10 +237,21 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         if (state == State.GAME_OVER) {
             canvas.drawColor(Color.argb(160, 0, 0, 0))
             canvas.drawText("GAME OVER", gctx.metrics.width / 2f, gctx.metrics.height / 2f - 50f, titlePaint)
-            canvas.drawText("Score: ${distanceInMeters}m", gctx.metrics.width / 2f, gctx.metrics.height / 2f + 50f, scorePaint)
+            
+            val bestScore = HighScoreManager.getHighScore()
+            canvas.drawText("Score: ${distanceInMeters}m  (Best: ${bestScore}m)", gctx.metrics.width / 2f, gctx.metrics.height / 2f + 50f, scorePaint)
             canvas.drawText("Tap to Restart", gctx.metrics.width / 2f, gctx.metrics.height / 2f + 180f, bodyPaint)
         } else {
             canvas.drawText("MainScene is running with a2dg", gctx.metrics.width / 2f, 430f, bodyPaint)
+            
+            // Draw Pause button in upper right
+            val pw = gctx.metrics.width
+            pauseBtnRect.set(pw - 120f, 60f, pw - 40f, 140f)
+            canvas.drawRoundRect(pauseBtnRect, 15f, 15f, pauseBtnPaint)
+            
+            // Draw pause bars (||)
+            canvas.drawRect(pw - 95f, 80f, pw - 85f, 120f, pauseSymbolPaint)
+            canvas.drawRect(pw - 75f, 80f, pw - 65f, 120f, pauseSymbolPaint)
         }
     }
 
@@ -238,6 +260,10 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         state = State.GAME_OVER
         SoundEffects.playGameOver()
         triggerShake(0.4f, 28f)
+
+        // Save high score
+        val distanceInMeters = (totalDistance / 100f).toInt()
+        HighScoreManager.updateHighScore(distanceInMeters)
     }
 
     private fun triggerShake(duration: Float, intensity: Float) {
@@ -250,6 +276,20 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
             if (state == State.GAME_OVER) {
                 gctx.sceneStack.change(MainScene(gctx))
                 return true
+            }
+
+            // Convert to game coordinates
+            val gameCoord = gctx.metrics.fromScreen(event.x, event.y)
+            val gx = gameCoord.x
+            val gy = gameCoord.y
+
+            if (state == State.RUNNING) {
+                val pw = gctx.metrics.width
+                pauseBtnRect.set(pw - 120f, 60f, pw - 40f, 140f)
+                if (pauseBtnRect.contains(gx, gy)) {
+                    gctx.sceneStack.push(PauseScene(gctx))
+                    return true
+                }
             }
 
             // 대시 시작 시점에 스트레치를 0에서 시작하여 '개기지' 않게 함
