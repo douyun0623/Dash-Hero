@@ -1,0 +1,82 @@
+package com.example.dashhero.game.scene
+
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Typeface
+import android.view.MotionEvent
+import com.example.dashhero.R
+import com.example.dashhero.game.objects.DashScrollBackground
+import com.example.dashhero.game.util.HighScoreManager
+import kr.ac.tukorea.ge.spgp2026.a2dg.scene.Scene
+import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
+
+class TitleScene(gctx: GameContext) : Scene(gctx) {
+    private val background = DashScrollBackground(gctx, R.drawable.bg_dash_city, -150f)
+
+    private val titlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.WHITE
+        textAlign = Paint.Align.CENTER
+        textSize = 100f
+        typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        setShadowLayer(10f, 0f, 5f, Color.BLACK)
+    }
+
+    private val subTitlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.rgb(255, 110, 70) // Orange color
+        textAlign = Paint.Align.CENTER
+        textSize = 42f
+        typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        setShadowLayer(5f, 0f, 2f, Color.BLACK)
+    }
+
+    private val bestScorePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.YELLOW
+        textAlign = Paint.Align.CENTER
+        textSize = 50f
+        typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        setShadowLayer(8f, 0f, 4f, Color.BLACK)
+    }
+
+    private val promptPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.rgb(210, 224, 255)
+        textAlign = Paint.Align.CENTER
+        textSize = 36f
+        typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+    }
+
+    private var promptBlinkTime = 0f
+
+    override fun update(gctx: GameContext) {
+        background.update(gctx)
+        promptBlinkTime += gctx.frameTime
+    }
+
+    override fun draw(canvas: Canvas) {
+        background.draw(canvas)
+
+        val cx = gctx.metrics.width / 2f
+
+        // Draw title
+        canvas.drawText("DASH HERO", cx, 400f, titlePaint)
+        canvas.drawText("Runner Action Game", cx, 470f, subTitlePaint)
+
+        // Draw best score
+        val bestScore = HighScoreManager.getHighScore()
+        canvas.drawText("Best Score: ${bestScore}m", cx, 750f, bestScorePaint)
+
+        // Blinking tap to start prompt
+        if ((promptBlinkTime * 2f).toInt() % 2 == 0) {
+            canvas.drawText("Tap to Start", cx, 1100f, promptPaint)
+        }
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            // Transition to MainScene
+            gctx.sceneStack.change(MainScene(gctx))
+            return true
+        }
+        return false
+    }
+}
