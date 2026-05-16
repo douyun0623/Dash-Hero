@@ -2,8 +2,8 @@
 memoc: true
 type: core
 scope: project-memory
-created: 2026-06-13T04:45:35
-updated: 2026-06-13T04:45:35
+created: 2026-06-13T04:51:11
+updated: 2026-06-13T04:51:11
 status: active
 tags:
   - memoc
@@ -13,10 +13,11 @@ tags:
 
 Generated shared activity index for memoc work logs.
 
-Last generated: 2026-06-13T04:45:35
+Last generated: 2026-06-13T04:51:11
 
 ## Recent Work
 
+- [Balance player jump height and platform height offsets](worklog/douyun0623/2026-06/20260613T0451-balance-player-jump-height-and-platform-height-offsets.md) — douyun0623 active.
 - [Implement visual effects (particles & screen shake)](worklog/douyun0623/2026-06/20260613T0445-implement-visual-effects-particles-screen-shake.md) — douyun0623 active.
 - [Implement retro sound effects using SoundPool](worklog/douyun0623/2026-06/20260613T0443-implement-retro-sound-effects-using-soundpool.md) — douyun0623 active.
 - [Implement procedural platform patterns and variable heights](worklog/douyun0623/2026-06/20260613T0441-implement-procedural-platform-patterns-and-variable-heights.md) — douyun0623 active.

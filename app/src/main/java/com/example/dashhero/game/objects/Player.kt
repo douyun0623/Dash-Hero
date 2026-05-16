@@ -23,7 +23,7 @@ class Player(
     private val height = 140f
 
     private val gravity = 2400f
-    private val jumpVelocity = -1000f
+    private val jumpVelocity = -1200f
     private val dashDuration = 0.24f
     private val baseX = x
     private val dashLeadX = 620f

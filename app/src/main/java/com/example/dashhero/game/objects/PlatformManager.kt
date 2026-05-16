@@ -44,8 +44,8 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
         if (char != '-') {
             // 기호에 따라 발판 높낮이 계산
             val heightOffset = when (char) {
-                'H' -> -150f // 고지대
-                'L' -> 120f  // 저지대
+                'H' -> -120f // 고지대
+                'L' -> 100f  // 저지대
                 else -> 0f   // 평지 ('X')
             }
             val targetY = platformY + heightOffset
