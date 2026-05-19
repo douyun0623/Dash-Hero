@@ -8,6 +8,7 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
     private val platforms = mutableListOf<GroundPlatform>()
     private val enemies = mutableListOf<Enemy>()
     private val batteries = mutableListOf<Battery>()
+    private val flyingEnemies = mutableListOf<DroneEnemy>()
     private var lastX = 0f
     private val unitWidth = 200f
     private val platformHeight = 60f
@@ -60,10 +61,18 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
             if (enemySpawned) {
                 enemies.add(Enemy(centerX, targetY - 200f))
             } else {
-                // 적이 없을 때 35% 확률로 배터리 배치
-                if (spawnCount > 2 && Math.random() < 0.35) {
+                val rand = Math.random()
+                if (spawnCount > 2 && rand < 0.35) {
                     batteries.add(Battery(centerX, targetY - 140f))
+                } else if (spawnCount > 5 && rand < 0.55) { // 20% 확률로 공중 적 배치
+                    flyingEnemies.add(DroneEnemy(centerX, targetY - 340f))
                 }
+            }
+        } else {
+            // 낙사 구간('-') 상공에 40% 확률로 드론 스폰 (밟고 갈 수 있는 기회 제공)
+            val centerX = lastX + unitWidth / 2f
+            if (spawnCount > 5 && Math.random() < 0.4) {
+                flyingEnemies.add(DroneEnemy(centerX, platformY - 280f))
             }
         }
         
@@ -85,6 +94,7 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
         platforms.forEach { it.scrollBy(distance) }
         enemies.forEach { it.scrollBy(distance) }
         batteries.forEach { it.scrollBy(distance) }
+        flyingEnemies.forEach { it.scrollBy(distance) }
         
         // 부족한 발판 보충
         while (lastX < screenWidth * 1.5f) {
@@ -95,6 +105,7 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
         platforms.removeAll { it.isOffScreen() }
         enemies.removeAll { it.isOffScreen() }
         batteries.removeAll { it.isOffScreen() || !it.isAlive }
+        flyingEnemies.removeAll { it.isOffScreen() }
     }
 
     fun updateEnemies(gctx: GameContext) {
@@ -103,17 +114,20 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
     
     fun getEnemies(): List<Enemy> = enemies
     fun getBatteries(): List<Battery> = batteries
+    fun getFlyingEnemies(): List<DroneEnemy> = flyingEnemies
 
     override fun update(gctx: GameContext) {
         // PlatformManager 자체의 update에서는 스크롤 처리를 MainScene에서 scrollBy로 호출하므로 
         // 개별 발판의 update(자체 이동 등)가 필요하다면 호출
         platforms.forEach { it.update(gctx) }
         batteries.forEach { it.update(gctx) }
+        flyingEnemies.forEach { it.update(gctx) }
     }
 
     override fun draw(canvas: Canvas) {
         platforms.forEach { it.draw(canvas) }
         batteries.forEach { it.draw(canvas) }
+        flyingEnemies.forEach { it.draw(canvas) }
         enemies.forEach { it.draw(canvas) }
     }
 }

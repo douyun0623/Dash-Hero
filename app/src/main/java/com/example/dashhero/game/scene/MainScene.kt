@@ -9,6 +9,7 @@ import android.view.MotionEvent
 import com.example.dashhero.R
 import com.example.dashhero.game.objects.DashScrollBackground
 import com.example.dashhero.game.objects.DashTrail
+import com.example.dashhero.game.objects.DroneEnemy
 import com.example.dashhero.game.objects.ParticleSystem
 import com.example.dashhero.game.objects.PlatformManager
 import com.example.dashhero.game.objects.Player
@@ -163,6 +164,47 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
                         // 아무 작업도 하지 않음 (pass through)
                     } else {
                         // 4. 일반 충돌 (사망)
+                        triggerGameOver()
+                    }
+                }
+            }
+        }
+
+        // 공중 적(드론)과의 충돌 판정
+        for (drone in platformManager.getFlyingEnemies()) {
+            if (drone.isAlive && player.collidesWith(drone)) {
+                val droneBB = drone.getBoundingBox()
+                
+                if (player.isDashing) {
+                    drone.die()
+                    particleSystem.spawnExplosion(
+                        drone.x, drone.y,
+                        intArrayOf(Color.rgb(255, 110, 70), Color.rgb(120, 80, 200)),
+                        25
+                    )
+                    triggerShake(0.18f, 22f)
+                } else {
+                    val overlapX = minOf(playerBB.right, droneBB.right) - maxOf(playerBB.left, droneBB.left)
+                    val overlapY = minOf(playerBB.bottom, droneBB.bottom) - maxOf(playerBB.top, droneBB.top)
+                    
+                    val prevPlayerBottom = playerBB.bottom - player.currentVelocityY * dt
+                    val prevDroneTop = droneBB.top - drone.currentVelocityY * dt
+                    
+                    val wasAbove = prevPlayerBottom <= prevDroneTop + 15f
+                    val isFallingRelative = (player.currentVelocityY - drone.currentVelocityY) > -100f
+                    
+                    if (isFallingRelative && (wasAbove || (overlapY < overlapX * 1.5f && playerBB.bottom <= droneBB.centerY()))) {
+                        player.bounce()
+                        SoundEffects.playStomp()
+                        particleSystem.spawnExplosion(
+                            drone.x, droneBB.top,
+                            intArrayOf(Color.rgb(255, 225, 95), Color.rgb(120, 80, 200)),
+                            15
+                        )
+                        triggerShake(0.12f, 10f)
+                    } else if (player.isReturning) {
+                        // 복귀 중일 때는 패스스루
+                    } else {
                         triggerGameOver()
                     }
                 }
