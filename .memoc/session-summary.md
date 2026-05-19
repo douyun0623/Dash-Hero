@@ -15,12 +15,12 @@ Replace, do not append. Keep <800B.
 History: worklog. Resume risks: 04-handoff.md.
 
 ## Status
-- Infinite procedural platforms, sound effects, particle effects, and screen shake are all fully implemented.
+- Core features plus TitleScene, SharedPreferences best score, collectible Battery items, Pause menu, and flying DroneEnemy are fully implemented and committed.
 
 ## Changed
-- Added custom screen shake and particle system triggers on enemy stomps, dash-kills, and game-over conditions.
+- Created start TitleScene, saved/displayed best score, implemented a transparent Pause scene overlay, spawned battery items with snd_collect, and added hovering drone enemies.
 
 ## Open Tasks
 
 ## Resume
-- All requested tasks (1, 2, 3) are complete. Ready for next user instructions.
+- All 5 extension features completed. Game is in a highly polished state. Ready for next instructions.

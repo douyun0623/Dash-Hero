@@ -4,8 +4,8 @@ description: Maintain this project's LLM-wiki memory files after durable context
 memoc: true
 type: skill
 scope: project-memory
-updated: 2026-06-13T05:02:13
-created: 2026-06-13T05:02:13
+updated: 2026-06-13T05:02:30
+created: 2026-06-13T05:02:30
 status: active
 tags:
   - memoc
