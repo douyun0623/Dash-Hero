@@ -64,7 +64,15 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
     private val scorePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.YELLOW
         textAlign = Paint.Align.CENTER
-        textSize = 84f
+        textSize = 60f
+        typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        setShadowLayer(5f, 0f, 0f, Color.BLACK)
+    }
+
+    private val gameOverScorePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.YELLOW
+        textAlign = Paint.Align.CENTER
+        textSize = 48f
         typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
         setShadowLayer(5f, 0f, 0f, Color.BLACK)
     }
@@ -282,7 +290,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         canvas.restore()
 
         val distanceInMeters = (totalDistance / 100f).toInt()
-        canvas.drawText("${distanceInMeters}m", gctx.metrics.width / 2f, 200f, scorePaint)
+        canvas.drawText("${distanceInMeters}m", gctx.metrics.width / 2f, 150f, scorePaint)
 
         canvas.drawText("Dash Hero", gctx.metrics.width / 2f, 360f, titlePaint)
         
@@ -291,7 +299,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
             canvas.drawText("GAME OVER", gctx.metrics.width / 2f, gctx.metrics.height / 2f - 50f, titlePaint)
             
             val bestScore = HighScoreManager.getHighScore()
-            canvas.drawText("Score: ${distanceInMeters}m  (Best: ${bestScore}m)", gctx.metrics.width / 2f, gctx.metrics.height / 2f + 50f, scorePaint)
+            canvas.drawText("Score: ${distanceInMeters}m  (Best: ${bestScore}m)", gctx.metrics.width / 2f, gctx.metrics.height / 2f + 50f, gameOverScorePaint)
             canvas.drawText("Tap to Restart", gctx.metrics.width / 2f, gctx.metrics.height / 2f + 180f, bodyPaint)
         } else {
             canvas.drawText("MainScene is running with a2dg", gctx.metrics.width / 2f, 430f, bodyPaint)

@@ -2,8 +2,8 @@
 memoc: true
 type: worklog
 scope: project-memory
-created: 2026-06-13T05:02:19
-updated: 2026-06-13T05:02:19
+created: 2026-06-13T05:47:21
+updated: 2026-06-13T05:47:21
 status: active
 tags:
   - memoc
@@ -13,7 +13,7 @@ tags:
 
 Generated index of conflict-light per-actor work records.
 
-Last generated: 2026-06-13T05:02:19
+Last generated: 2026-06-13T05:47:21
 
 ## Layout
 
@@ -28,6 +28,7 @@ worklog/<actor>/YYYY-MM/YYYYMMDDTHHMM-title.md
 
 ## Recent Work
 
+- [Adjust score text size and position for better readability](douyun0623/2026-06/20260613T0547-adjust-score-text-size-and-position-for-better-readability.md) — douyun0623 active.
 - [Implement flying DroneEnemy and integrate in PlatformManager spawning](douyun0623/2026-06/20260613T0502-implement-flying-droneenemy-and-integrate-in-platformmanager-spawning.md) — douyun0623 active.
 - [Implement collectible Battery item and playCollect audio feedback](douyun0623/2026-06/20260613T0501-implement-collectible-battery-item-and-playcollect-audio-feedback.md) — douyun0623 active.
 - [Implement transparent Pause overlay scene and Pause system](douyun0623/2026-06/20260613T0500-implement-transparent-pause-overlay-scene-and-pause-system.md) — douyun0623 active.
