@@ -27,7 +27,7 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
     private var currentPattern = "XXXXXXXXXX" // 첫 패턴은 안전지대로 시작
     private var patternIndex = 0
     private var spawnCount = 0 // 생성된 총 발판/슬롯 수
-    var isPlayerDashingOrReturning: Boolean = false
+    var playerScreenX: Float = 180f
 
     init {
         // 초기 발판 생성 (화면을 채울 정도)
@@ -55,25 +55,30 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
             val centerX = lastX + unitWidth / 2f
             platforms.add(GroundPlatform(centerX, targetY, unitWidth + 2f, platformHeight)) // 이음새 방지를 위해 +2f
             
+            // 플레이어와의 거리가 650px 이하인 너무 가까운 경우 적 스폰을 제한하여 복귀 시 억까 방지
+            val distanceToPlayer = centerX - playerScreenX
+            val isTooClose = distanceToPlayer < 650f
+            
             // 초기 5개 슬롯 이후부터 적 스폰
             // 고지대('H')에서는 조금 더 높은 확률(40%)로 적 배치
             val spawnChance = if (char == 'H') 0.4 else 0.3
-            // 플레이어가 대시/복귀 중일 때는 적 스폰을 전면 통제하여 안전 지대 형성
-            val enemySpawned = !isPlayerDashingOrReturning && spawnCount > 5 && Math.random() < spawnChance
+            val enemySpawned = !isTooClose && spawnCount > 5 && Math.random() < spawnChance
             if (enemySpawned) {
                 enemies.add(Enemy(centerX, targetY - 200f))
             } else {
                 val rand = Math.random()
                 if (spawnCount > 2 && rand < 0.35) {
                     batteries.add(Battery(centerX, targetY - 140f))
-                } else if (!isPlayerDashingOrReturning && spawnCount > 5 && rand < 0.55) { // 대시/복귀 아닐 때만 공중 적 배치
+                } else if (!isTooClose && spawnCount > 5 && rand < 0.55) { // 너무 가깝지 않을 때만 공중 적 배치
                     flyingEnemies.add(DroneEnemy(centerX, targetY - 260f))
                 }
             }
         } else {
-            // 낙사 구간('-') 상공에 40% 확률로 드론 스폰 (플레이어가 대시/복귀 중일 때는 스폰 방지)
+            // 낙사 구간('-') 상공에 40% 확률로 드론 스폰 (플레이어와 너무 가까우면 스폰 방지)
             val centerX = lastX + unitWidth / 2f
-            if (!isPlayerDashingOrReturning && spawnCount > 5 && Math.random() < 0.4) {
+            val distanceToPlayer = centerX - playerScreenX
+            val isTooClose = distanceToPlayer < 650f
+            if (!isTooClose && spawnCount > 5 && Math.random() < 0.4) {
                 flyingEnemies.add(DroneEnemy(centerX, platformY - 260f))
             }
         }

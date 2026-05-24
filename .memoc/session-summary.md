@@ -15,12 +15,12 @@ Replace, do not append. Keep <800B.
 History: worklog. Resume risks: 04-handoff.md.
 
 ## Status
-- Core features, extensions, and structural dashboard safety fixes (preventing enemy spawns during dash/return) are implemented and verified.
+- Core features, extensions, and dynamic distance-based safety fixes (preventing enemy spawns within 650px of player) are implemented and verified.
 
 ## Changed
-- Prevented enemy and drone spawning in PlatformManager when the player is dashing or returning. This creates a structural safe zone during high-speed camera scrolling.
+- Replaced the simple dash-state spawn ban with a dynamic distance-based rule in PlatformManager. Spawning of enemies/drones is restricted only when the spawn coordinates are within 650px of playerScreenX, ensuring enemies still spawn properly during normal gameplay while preventing dash-return scroll deaths.
 
 ## Open Tasks
 
 ## Resume
-- Structural dashboard safety and balancing adjustments completed. Ready for next instructions.
+- Dynamic distance-based safety and balancing adjustments completed. Ready for next instructions.
