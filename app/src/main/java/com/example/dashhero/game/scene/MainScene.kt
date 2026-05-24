@@ -116,6 +116,9 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         particleSystem.update(gctx)
         dashTrail.update(gctx)
         player.updateWithCollision(gctx, platformManager)
+        
+        // 플레이어 대시/복귀 상태를 PlatformManager에 동기화하여 고속 스크롤 중 적 스폰 차단
+        platformManager.isPlayerDashingOrReturning = player.isDashing || player.isReturning
 
         // 배터리 아이템과의 충돌 판정
         for (battery in platformManager.getBatteries()) {

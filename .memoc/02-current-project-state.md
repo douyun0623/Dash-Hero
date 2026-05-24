@@ -16,12 +16,12 @@ Last synced: 2026-06-13T03:02:05
 ## Current Status
 
 - Core gameplay features, extension features (TitleScene, best score, pause menu, battery collectibles, and flying DroneEnemy) are fully implemented.
-- Resolved camera-scroll death via a post-dash invincibility buffer (0.5s) and balanced flying drone spawning height and drift to eliminate unfair game layouts.
+- Resolved camera-scroll death structurally by disabling enemy/drone spawning during player dash and return to create a temporary safe zone.
 
 ## Project Snapshot
 
 <!-- memoc:snapshot:start -->
-- Last synced: 2026-06-13T06:09:31
+- Last synced: 2026-06-13T06:22:43
 - Detected stack: Not detected
 
 ### Config Files

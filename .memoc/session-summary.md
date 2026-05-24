@@ -15,12 +15,12 @@ Replace, do not append. Keep <800B.
 History: worklog. Resume risks: 04-handoff.md.
 
 ## Status
-- Core features, extensions, and recent gameplay feel improvements (post-dash invincibility, drone height balancing) are implemented and verified.
+- Core features, extensions, and structural dashboard safety fixes (preventing enemy spawns during dash/return) are implemented and verified.
 
 ## Changed
-- Added a 0.5s post-dash invincibility window where side collisions with drones/enemies are ignored. Reduced drone hover drift and lowered drone spawn heights to fix unfair layout deaths.
+- Prevented enemy and drone spawning in PlatformManager when the player is dashing or returning. This creates a structural safe zone during high-speed camera scrolling.
 
 ## Open Tasks
 
 ## Resume
-- Gameplay feel balancing adjustments completed. Ready for next instructions.
+- Structural dashboard safety and balancing adjustments completed. Ready for next instructions.

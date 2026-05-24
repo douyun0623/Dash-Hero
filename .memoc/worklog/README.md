@@ -2,8 +2,8 @@
 memoc: true
 type: worklog
 scope: project-memory
-created: 2026-06-13T06:09:49
-updated: 2026-06-13T06:09:49
+created: 2026-06-13T06:23:00
+updated: 2026-06-13T06:23:00
 status: active
 tags:
   - memoc
@@ -13,7 +13,7 @@ tags:
 
 Generated index of conflict-light per-actor work records.
 
-Last generated: 2026-06-13T06:09:49
+Last generated: 2026-06-13T06:23:00
 
 ## Layout
 
@@ -28,6 +28,7 @@ worklog/<actor>/YYYY-MM/YYYYMMDDTHHMM-title.md
 
 ## Recent Work
 
+- [Implement structural safe zone by preventing enemy spawn during player dash and return](douyun0623/2026-06/20260613T0622-implement-structural-safe-zone-by-preventing-enemy-spawn-during-player-dash-and-.md) — douyun0623 active.
 - [Improve post-dash invincibility and balance drone spawn heights](douyun0623/2026-06/20260613T0609-improve-post-dash-invincibility-and-balance-drone-spawn-heights.md) — douyun0623 active.
 - [Finalize README.md with 100 percent progress and update features](douyun0623/2026-06/20260613T0555-finalize-readme-md-with-100-percent-progress-and-update-features.md) — douyun0623 active.
 - [Implement looping BGM using Android MediaPlayer and lifecycle control](douyun0623/2026-06/20260613T0554-implement-looping-bgm-using-android-mediaplayer-and-lifecycle-control.md) — douyun0623 active.
