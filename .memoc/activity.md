@@ -2,8 +2,8 @@
 memoc: true
 type: core
 scope: project-memory
-created: 2026-06-13T05:55:36
-updated: 2026-06-13T05:55:36
+created: 2026-06-13T06:09:49
+updated: 2026-06-13T06:09:49
 status: active
 tags:
   - memoc
@@ -13,10 +13,11 @@ tags:
 
 Generated shared activity index for memoc work logs.
 
-Last generated: 2026-06-13T05:55:36
+Last generated: 2026-06-13T06:09:49
 
 ## Recent Work
 
+- [Improve post-dash invincibility and balance drone spawn heights](worklog/douyun0623/2026-06/20260613T0609-improve-post-dash-invincibility-and-balance-drone-spawn-heights.md) — douyun0623 active.
 - [Finalize README.md with 100 percent progress and update features](worklog/douyun0623/2026-06/20260613T0555-finalize-readme-md-with-100-percent-progress-and-update-features.md) — douyun0623 active.
 - [Implement looping BGM using Android MediaPlayer and lifecycle control](worklog/douyun0623/2026-06/20260613T0554-implement-looping-bgm-using-android-mediaplayer-and-lifecycle-control.md) — douyun0623 active.
 - [Adjust score text size and position for better readability](worklog/douyun0623/2026-06/20260613T0547-adjust-score-text-size-and-position-for-better-readability.md) — douyun0623 active.

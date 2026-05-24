@@ -15,12 +15,12 @@ Replace, do not append. Keep <800B.
 History: worklog. Resume risks: 04-handoff.md.
 
 ## Status
-- Core features plus TitleScene, SharedPreferences best score, collectible Battery items, Pause menu, and flying DroneEnemy are fully implemented and committed.
+- Core features, extensions, and recent gameplay feel improvements (post-dash invincibility, drone height balancing) are implemented and verified.
 
 ## Changed
-- Created start TitleScene, saved/displayed best score, implemented a transparent Pause scene overlay, spawned battery items with snd_collect, and added hovering drone enemies.
+- Added a 0.5s post-dash invincibility window where side collisions with drones/enemies are ignored. Reduced drone hover drift and lowered drone spawn heights to fix unfair layout deaths.
 
 ## Open Tasks
 
 ## Resume
-- All 5 extension features completed. Game is in a highly polished state. Ready for next instructions.
+- Gameplay feel balancing adjustments completed. Ready for next instructions.

@@ -167,8 +167,8 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
                         )
                         // 밟기 화면 흔들림
                         triggerShake(0.12f, 10f)
-                    } else if (player.isReturning) {
-                        // 3. 복귀 중일 때는 옆면 충돌 무시 (반투명 패스스루)
+                    } else if (player.isInvincible || player.isReturning) {
+                        // 3. 복귀 중이거나 대시 직후 무적 상태일 때는 옆면 충돌 무시 (반투명 패스스루)
                         // 아무 작업도 하지 않음 (pass through)
                     } else {
                         // 4. 일반 충돌 (사망)
@@ -210,8 +210,8 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
                             15
                         )
                         triggerShake(0.12f, 10f)
-                    } else if (player.isReturning) {
-                        // 복귀 중일 때는 패스스루
+                    } else if (player.isInvincible || player.isReturning) {
+                        // 복귀 중이거나 대시 직후 무적 상태일 때는 패스스루
                     } else {
                         triggerGameOver()
                     }

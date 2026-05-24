@@ -48,7 +48,7 @@ class DroneEnemy(
 
     val isAlive: Boolean get() = state == State.ALIVE
     val currentVelocityY: Float 
-        get() = if (state == State.DEAD) velocityY else 4.0f * cos(timeAccum * 4.0f) * 45f
+        get() = if (state == State.DEAD) velocityY else 4.0f * cos(timeAccum * 4.0f) * 25f
 
     fun die() {
         if (state == State.DEAD) return
@@ -83,7 +83,7 @@ class DroneEnemy(
 
         // Hover & Patrol animation
         timeAccum += dt
-        baseLockedY += sin(timeAccum * 4.0f) * 45f * dt
+        baseLockedY += sin(timeAccum * 4.0f) * 25f * dt
         baseLockedX += cos(timeAccum * 2.0f) * 75f * dt
 
         x = baseLockedX

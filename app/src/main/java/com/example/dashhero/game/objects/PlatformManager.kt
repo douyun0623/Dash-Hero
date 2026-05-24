@@ -65,14 +65,14 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
                 if (spawnCount > 2 && rand < 0.35) {
                     batteries.add(Battery(centerX, targetY - 140f))
                 } else if (spawnCount > 5 && rand < 0.55) { // 20% 확률로 공중 적 배치
-                    flyingEnemies.add(DroneEnemy(centerX, targetY - 340f))
+                    flyingEnemies.add(DroneEnemy(centerX, targetY - 260f))
                 }
             }
         } else {
             // 낙사 구간('-') 상공에 40% 확률로 드론 스폰 (밟고 갈 수 있는 기회 제공)
             val centerX = lastX + unitWidth / 2f
             if (spawnCount > 5 && Math.random() < 0.4) {
-                flyingEnemies.add(DroneEnemy(centerX, platformY - 280f))
+                flyingEnemies.add(DroneEnemy(centerX, platformY - 260f))
             }
         }
         

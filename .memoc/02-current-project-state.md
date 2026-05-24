@@ -15,13 +15,13 @@ Last synced: 2026-06-13T03:02:05
 
 ## Current Status
 
-- Core gameplay prototype (auto-jump, touch-dash, stomping, infinite platform generation, and basic enemy AI) is fully implemented.
-- Collision stability (distinguishing between stomp vs. lateral hit) is currently the primary area needing polish.
+- Core gameplay features, extension features (TitleScene, best score, pause menu, battery collectibles, and flying DroneEnemy) are fully implemented.
+- Resolved camera-scroll death via a post-dash invincibility buffer (0.5s) and balanced flying drone spawning height and drift to eliminate unfair game layouts.
 
 ## Project Snapshot
 
 <!-- memoc:snapshot:start -->
-- Last synced: 2026-06-13T05:55:24
+- Last synced: 2026-06-13T06:09:31
 - Detected stack: Not detected
 
 ### Config Files

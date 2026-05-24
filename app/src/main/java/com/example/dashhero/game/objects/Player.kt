@@ -37,8 +37,11 @@ class Player(
     private var crouchTimeLeft = crouchDuration
     private var dashTimeLeft = 0f
     private var dashLockedY = y
+    private var postDashInvincibleTime = 0f
     val isDashing: Boolean
         get() = dashTimeLeft > 0f
+    val isInvincible: Boolean
+        get() = isDashing || postDashInvincibleTime > 0f
     val isReturning: Boolean
         get() = !isDashing && x > baseX + 2f
     val dashForwardRatio: Float
@@ -80,6 +83,11 @@ class Player(
     fun updateWithCollision(gctx: GameContext, platformManager: PlatformManager) {
         val dt = gctx.frameTime
 
+        if (postDashInvincibleTime > 0f) {
+            postDashInvincibleTime -= dt
+            if (postDashInvincibleTime < 0f) postDashInvincibleTime = 0f
+        }
+
         // 현재 위치에서의 발판 확인
         val currentPlatform = platformManager.getPlatformAt(x)
         val platformTopY = currentPlatform?.topY ?: Float.MAX_VALUE
@@ -90,6 +98,7 @@ class Player(
             if (dashTimeLeft <= 0f) {
                 dashTimeLeft = 0f
                 velocityY = 0f
+                postDashInvincibleTime = 0.5f // 대시 종료 직후 0.5초간 무적 버퍼 제공
             }
         } else if (crouchTimeLeft > 0f) {
             // 발판 위에 있을 때만 웅크리기 가능 (오차 범위를 넉넉하게 줌)
@@ -152,8 +161,8 @@ class Player(
             Color.rgb(255, 110, 70)
         } else if (isCrouching) {
             Color.rgb(255, 225, 95)
-        } else if (isReturning) {
-            Color.argb(160, 255, 205, 80) // 복귀 중일 때는 반투명한 노란색
+        } else if (isInvincible || isReturning) {
+            Color.argb(160, 255, 205, 80) // 무적 상태 또는 복귀 중일 때는 반투명한 노란색
         } else {
             Color.rgb(255, 205, 80)
         }
