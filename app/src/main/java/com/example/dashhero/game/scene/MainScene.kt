@@ -322,7 +322,6 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         if (state == State.GAME_OVER) return
         state = State.GAME_OVER
         SoundEffects.playGameOver()
-        triggerShake(0.4f, 28f)
 
         // Save high score
         val distanceInMeters = (totalDistance / 100f).toInt()

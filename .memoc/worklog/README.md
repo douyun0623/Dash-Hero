@@ -2,8 +2,8 @@
 memoc: true
 type: worklog
 scope: project-memory
-created: 2026-06-13T06:27:21
-updated: 2026-06-13T06:27:21
+created: 2026-06-13T06:42:37
+updated: 2026-06-13T06:42:37
 status: active
 tags:
   - memoc
@@ -13,7 +13,7 @@ tags:
 
 Generated index of conflict-light per-actor work records.
 
-Last generated: 2026-06-13T06:27:21
+Last generated: 2026-06-13T06:42:37
 
 ## Layout
 
@@ -28,6 +28,7 @@ worklog/<actor>/YYYY-MM/YYYYMMDDTHHMM-title.md
 
 ## Recent Work
 
+- [Disable screen shake on game over for cleaner restart UI](douyun0623/2026-06/20260613T0642-disable-screen-shake-on-game-over-for-cleaner-restart-ui.md) — douyun0623 active.
 - [Implement dynamic distance-based spawning safety rule to prevent scroll deaths while keeping gameplay difficulty](douyun0623/2026-06/20260613T0627-implement-dynamic-distance-based-spawning-safety-rule-to-prevent-scroll-deaths-w.md) — douyun0623 active.
 - [Implement structural safe zone by preventing enemy spawn during player dash and return](douyun0623/2026-06/20260613T0622-implement-structural-safe-zone-by-preventing-enemy-spawn-during-player-dash-and-.md) — douyun0623 active.
 - [Improve post-dash invincibility and balance drone spawn heights](douyun0623/2026-06/20260613T0609-improve-post-dash-invincibility-and-balance-drone-spawn-heights.md) — douyun0623 active.
