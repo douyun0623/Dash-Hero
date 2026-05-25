@@ -45,10 +45,25 @@ class Player(
     private var dashRechargeTime = 0f
     private val rechargeDuration = 2.5f
 
+    // 파워업 버프 및 콤보/피버 시스템 필드
+    var magnetTimeLeft = 0f
+    var giantTimeLeft = 0f
+    var comboCount = 0
+    var comboTimer = 0f
+    private val comboDuration = 2.0f
+    var feverTimeLeft = 0f
+    private val feverDuration = 5.0f
+
     val isDashing: Boolean
         get() = dashTimeLeft > 0f
+    val isGiant: Boolean
+        get() = giantTimeLeft > 0f
+    val isMagnetActive: Boolean
+        get() = magnetTimeLeft > 0f
+    val isFever: Boolean
+        get() = feverTimeLeft > 0f
     val isInvincible: Boolean
-        get() = isDashing || postDashInvincibleTime > 0f
+        get() = isDashing || postDashInvincibleTime > 0f || giantTimeLeft > 0f || feverTimeLeft > 0f
     val isReturning: Boolean
         get() = !isDashing && x > baseX + 2f
     val dashForwardRatio: Float
@@ -116,6 +131,27 @@ class Player(
             if (postDashInvincibleTime < 0f) postDashInvincibleTime = 0f
         }
 
+        // 파워업 버프 및 콤보/피버 타이머 업데이트
+        if (magnetTimeLeft > 0f) {
+            magnetTimeLeft -= dt
+            if (magnetTimeLeft < 0f) magnetTimeLeft = 0f
+        }
+        if (giantTimeLeft > 0f) {
+            giantTimeLeft -= dt
+            if (giantTimeLeft < 0f) giantTimeLeft = 0f
+        }
+        if (comboTimer > 0f) {
+            comboTimer -= dt
+            if (comboTimer <= 0f) {
+                comboTimer = 0f
+                comboCount = 0
+            }
+        }
+        if (feverTimeLeft > 0f) {
+            feverTimeLeft -= dt
+            if (feverTimeLeft < 0f) feverTimeLeft = 0f
+        }
+
         // 현재 위치에서의 발판 확인
         val currentPlatform = platformManager.getPlatformAt(x)
         val platformTopY = currentPlatform?.topY ?: Float.MAX_VALUE
@@ -176,7 +212,10 @@ class Player(
     }
 
     fun getBoundingBox(): RectF {
-        bounds.set(x - width / 2f, y - height / 2f, x + width / 2f, y + height / 2f)
+        val scale = if (isGiant) 1.6f else 1.0f
+        val w = width * scale
+        val h = height * scale
+        bounds.set(x - w / 2f, y - h / 2f, x + w / 2f, y + h / 2f)
         return bounds
     }
 
@@ -187,18 +226,21 @@ class Player(
         val isCrouching = !isDashing && crouchTimeLeft > 0f
         paint.color = if (isDashing) {
             Color.rgb(255, 110, 70)
+        } else if (isGiant) {
+            Color.rgb(255, 170, 0) // 거대화 시 찬란한 황금색
         } else if (isCrouching) {
             Color.rgb(255, 225, 95)
         } else if (isInvincible || isReturning) {
-            Color.argb(160, 255, 205, 80) // 무적 상태 또는 복귀 중일 때는 반투명한 노란색
+            Color.argb(160, 255, 205, 80)
         } else {
             Color.rgb(255, 205, 80)
         }
 
-        val drawWidth = if (isCrouching) width * 1.18f else width
-        val drawHeight = if (isCrouching) height * 0.76f else height
+        val scale = if (isGiant) 1.6f else 1.0f
+        val drawWidth = if (isCrouching) width * 1.18f else width * scale
+        val drawHeight = if (isCrouching) height * 0.76f else height * scale
         bounds.set(x - drawWidth / 2f, y - drawHeight / 2f, x + drawWidth / 2f, y + drawHeight / 2f)
-        canvas.drawRoundRect(bounds, 32f, 32f, paint)
+        canvas.drawRoundRect(bounds, 32f * scale, 32f * scale, paint)
 
         // 디버그용 충돌 박스 가시화 (빨간색 테두리)
         val debugPaint = Paint().apply {
@@ -208,5 +250,25 @@ class Player(
         }
         val bb = getBoundingBox()
         canvas.drawRect(bb, debugPaint)
+    }
+
+    fun addCombo() {
+        if (isFever) {
+            comboTimer = comboDuration
+            comboCount++
+            return
+        }
+        comboCount++
+        comboTimer = comboDuration
+        if (comboCount >= 5) {
+            triggerFever()
+        }
+    }
+
+    private fun triggerFever() {
+        feverTimeLeft = feverDuration
+        postDashInvincibleTime = feverDuration
+        comboCount = 5
+        comboTimer = feverDuration
     }
 }

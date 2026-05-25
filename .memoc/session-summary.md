@@ -15,12 +15,12 @@ Replace, do not append. Keep <800B.
 History: worklog. Resume risks: 04-handoff.md.
 
 ## Status
-- Dash stack energy system (max 3 stacks, 2.5s recharge rate) is implemented with visual HUD.
+- Refactored items to support Battery, Magnet, and Giant Star. Implemented U-magnet and star drawing, item physical attraction physics, and HUD timer bars.
 
 ## Changed
-- Added dash stacks to Player, modifying dash trigger conditions. Implemented automatic recharge timer (2.5s) and linked battery collection to restore 1 stack. Rendered circular HUD indicators with a recharge arc.
+- Deleted Battery.kt; added Item.kt (BATTERY, MAGNET, STAR) with drawing and magnet attraction pull. Refactored PlatformManager to spawn items randomly. Integrated buff timers and size scaling (1.6x) on Player. Enabled giant mode to smash enemies.
 
 ## Open Tasks
 
 ## Resume
-- Dash stack implementation complete and tested. Ready for 2nd phase (Magnet & Star items).
+- Magnet and Giant Star implementation complete and tested. Ready for 3rd phase (Combo and Fever mode).

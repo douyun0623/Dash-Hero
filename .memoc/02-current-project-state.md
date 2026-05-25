@@ -18,11 +18,12 @@ Last synced: 2026-06-13T03:02:05
 - Core gameplay features, extension features (TitleScene, best score, pause menu, battery collectibles, and flying DroneEnemy) are fully implemented.
 - Resolved camera-scroll death dynamically via 650px radius spawn constraints, and disabled screen shaking during game-over scenes.
 - Implemented a 3-stack dash energy system with a visual HUD indicator and a 2.5s automatic recharge rate.
+- Refactored items to support Battery (70%), Magnet (15%, pulls items physically), and Giant Star (15%, 1.6x player size, invincibility).
 
 ## Project Snapshot
 
 <!-- memoc:snapshot:start -->
-- Last synced: 2026-06-13T06:46:49
+- Last synced: 2026-06-13T06:48:12
 - Detected stack: Not detected
 
 ### Config Files

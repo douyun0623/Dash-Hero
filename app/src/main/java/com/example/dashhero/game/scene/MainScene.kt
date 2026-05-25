@@ -13,6 +13,8 @@ import com.example.dashhero.game.objects.DroneEnemy
 import com.example.dashhero.game.objects.ParticleSystem
 import com.example.dashhero.game.objects.PlatformManager
 import com.example.dashhero.game.objects.Player
+import com.example.dashhero.game.objects.Item
+import com.example.dashhero.game.objects.ItemType
 import com.example.dashhero.game.sound.SoundEffects
 import com.example.dashhero.game.util.HighScoreManager
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.collidesWith
@@ -129,6 +131,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         background.update(gctx)
         platformManager.update(gctx)
         platformManager.updateEnemies(gctx)
+        platformManager.updateItems(player.screenX, player.screenY, player.isMagnetActive, gctx.frameTime)
         particleSystem.update(gctx)
         dashTrail.update(gctx)
         player.updateWithCollision(gctx, platformManager)
@@ -136,14 +139,23 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         // 플레이어의 실시간 화면 X 좌표를 동기화하여 너무 가까운 곳에 적 스폰 억제 (복귀 억까 방지)
         platformManager.playerScreenX = player.screenX
 
-        // 배터리 아이템과의 충돌 판정
-        for (battery in platformManager.getBatteries()) {
-            if (battery.isAlive && player.collidesWith(battery)) {
-                battery.collect()
+        // 아이템 (배터리, 자석, 별)과의 충돌 판정
+        for (item in platformManager.getItems()) {
+            if (item.isAlive && player.collidesWith(item)) {
+                item.collect()
                 SoundEffects.playCollect()
-                // 배터리 획득 시 보너스 거리 제공 (+10m) 및 대시 스택 충전 (+1)
-                totalDistance += 1000f
-                player.chargeStack(1)
+                when (item.type) {
+                    ItemType.BATTERY -> {
+                        totalDistance += 1000f
+                        player.chargeStack(1)
+                    }
+                    ItemType.MAGNET -> {
+                        player.magnetTimeLeft = 6.0f
+                    }
+                    ItemType.STAR -> {
+                        player.giantTimeLeft = 5.0f
+                    }
+                }
             }
         }
 
@@ -154,9 +166,10 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
             if (enemy.isAlive && player.collidesWith(enemy)) {
                 val enemyBB = enemy.getBoundingBox()
                 
-                if (player.isDashing) {
-                    // 1. 대시 공격 (처치)
+                if (player.isDashing || player.isGiant) {
+                    // 1. 대시 공격 또는 거대화 무적 파쇄 (처치)
                     enemy.die()
+                    player.addCombo() // 콤보 증가
                     // 대시 타격 파티클 스폰 (주황색 & 보라색)
                     particleSystem.spawnExplosion(
                         enemy.x, enemy.y,
@@ -178,6 +191,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
                     if (isFallingRelative && (wasAbove || (overlapY < overlapX * 1.5f && playerBB.bottom <= enemyBB.centerY()))) {
                         // 2. 밟기 판정: 위에서 아래로 충돌했거나 밟기 영역 내일 때
                         player.bounce()
+                        player.addCombo() // 밟기 시 콤보 누적
                         SoundEffects.playStomp()
                         // 밟기 파티클 스폰 (연한 노란색 & 보라색)
                         particleSystem.spawnExplosion(
@@ -203,8 +217,9 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
             if (drone.isAlive && player.collidesWith(drone)) {
                 val droneBB = drone.getBoundingBox()
                 
-                if (player.isDashing) {
+                if (player.isDashing || player.isGiant) {
                     drone.die()
+                    player.addCombo() // 콤보 누적
                     particleSystem.spawnExplosion(
                         drone.x, drone.y,
                         intArrayOf(Color.rgb(255, 110, 70), Color.rgb(120, 80, 200)),
@@ -223,6 +238,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
                     
                     if (isFallingRelative && (wasAbove || (overlapY < overlapX * 1.5f && playerBB.bottom <= droneBB.centerY()))) {
                         player.bounce()
+                        player.addCombo() // 밟기 시 콤보 누적
                         SoundEffects.playStomp()
                         particleSystem.spawnExplosion(
                             drone.x, droneBB.top,
@@ -343,6 +359,27 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
                         canvas.drawArc(rect, -90f, 360f * ratio, false, dashRechargePaint)
                     }
                 }
+            }
+            
+            // 버프 타이머 UI 렌더링 (대시 스택 오른쪽)
+            var buffOffset = 0f
+            val buffUiY = 110f
+            val buffStartX = 300f
+            val barHeight = 16f
+            val barMaxWidth = 100f
+            
+            if (player.isMagnetActive) {
+                val magnetPaint = Paint().apply { color = Color.rgb(60, 150, 255); style = Paint.Style.FILL }
+                val ratio = player.magnetTimeLeft / 6.0f
+                canvas.drawRect(buffStartX, buffUiY - barHeight / 2f, buffStartX + barMaxWidth * ratio, buffUiY + barHeight / 2f, magnetPaint)
+                buffOffset += 120f
+            }
+            
+            if (player.isGiant) {
+                val starBarPaint = Paint().apply { color = Color.rgb(255, 170, 0); style = Paint.Style.FILL }
+                val ratio = player.giantTimeLeft / 5.0f
+                val sx = buffStartX + buffOffset
+                canvas.drawRect(sx, buffUiY - barHeight / 2f, sx + barMaxWidth * ratio, buffUiY + barHeight / 2f, starBarPaint)
             }
             
             // Draw Pause button in upper right
