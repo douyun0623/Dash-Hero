@@ -86,6 +86,22 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         color = Color.BLACK
         style = Paint.Style.FILL
     }
+    
+    // 대시 스택 UI용 Paint 필드
+    private val dashStackPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.rgb(255, 220, 0)
+        style = Paint.Style.FILL
+        setShadowLayer(6f, 0f, 0f, Color.rgb(255, 220, 0))
+    }
+    private val dashEmptyPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.argb(80, 255, 255, 255)
+        style = Paint.Style.FILL
+    }
+    private val dashRechargePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.rgb(255, 220, 0)
+        style = Paint.Style.STROKE
+        strokeWidth = 6f
+    }
 
     init {
         world.add(background, Layer.BG)
@@ -125,8 +141,9 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
             if (battery.isAlive && player.collidesWith(battery)) {
                 battery.collect()
                 SoundEffects.playCollect()
-                // 배터리 획득 시 보너스 거리 제공 (+10m)
+                // 배터리 획득 시 보너스 거리 제공 (+10m) 및 대시 스택 충전 (+1)
                 totalDistance += 1000f
+                player.chargeStack(1)
             }
         }
 
@@ -305,7 +322,28 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
             canvas.drawText("Score: ${distanceInMeters}m  (Best: ${bestScore}m)", gctx.metrics.width / 2f, gctx.metrics.height / 2f + 50f, gameOverScorePaint)
             canvas.drawText("Tap to Restart", gctx.metrics.width / 2f, gctx.metrics.height / 2f + 180f, bodyPaint)
         } else {
-            canvas.drawText("MainScene is running with a2dg", gctx.metrics.width / 2f, 430f, bodyPaint)
+            // 대시 스택 UI 렌더링 (화면 좌측 상단)
+            val startUiX = 80f
+            val uiY = 110f
+            val radius = 24f
+            val spacing = 64f
+            val maxStacks = 3
+            val currentStacks = player.currentDashStacks
+            
+            for (i in 0 until maxStacks) {
+                val cx = startUiX + i * spacing
+                if (i < currentStacks) {
+                    canvas.drawCircle(cx, uiY, radius, dashStackPaint)
+                } else {
+                    canvas.drawCircle(cx, uiY, radius, dashEmptyPaint)
+                    // 바로 다음 충전 중인 칸에 원형 충전 게이지 렌더링
+                    if (i == currentStacks) {
+                        val ratio = player.dashRechargeRatio
+                        val rect = RectF(cx - radius, uiY - radius, cx + radius, uiY + radius)
+                        canvas.drawArc(rect, -90f, 360f * ratio, false, dashRechargePaint)
+                    }
+                }
+            }
             
             // Draw Pause button in upper right
             val pw = gctx.metrics.width

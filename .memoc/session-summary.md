@@ -15,12 +15,12 @@ Replace, do not append. Keep <800B.
 History: worklog. Resume risks: 04-handoff.md.
 
 ## Status
-- Dynamic distance-based spawning safety (650px limit) is implemented, and screen shake on game-over is disabled.
+- Dash stack energy system (max 3 stacks, 2.5s recharge rate) is implemented with visual HUD.
 
 ## Changed
-- Removed screen shake trigger on game-over to prevent jittering on the Restart screen.
+- Added dash stacks to Player, modifying dash trigger conditions. Implemented automatic recharge timer (2.5s) and linked battery collection to restore 1 stack. Rendered circular HUD indicators with a recharge arc.
 
 ## Open Tasks
 
 ## Resume
-- Cleaned up game-over shaking. Ready for next instructions.
+- Dash stack implementation complete and tested. Ready for 2nd phase (Magnet & Star items).

@@ -16,12 +16,13 @@ Last synced: 2026-06-13T03:02:05
 ## Current Status
 
 - Core gameplay features, extension features (TitleScene, best score, pause menu, battery collectibles, and flying DroneEnemy) are fully implemented.
-- Resolved camera-scroll death dynamically via a 650px radius spawn constraint, and disabled screen shaking during game-over scenes for a cleaner UI.
+- Resolved camera-scroll death dynamically via 650px radius spawn constraints, and disabled screen shaking during game-over scenes.
+- Implemented a 3-stack dash energy system with a visual HUD indicator and a 2.5s automatic recharge rate.
 
 ## Project Snapshot
 
 <!-- memoc:snapshot:start -->
-- Last synced: 2026-06-13T06:42:17
+- Last synced: 2026-06-13T06:46:49
 - Detected stack: Not detected
 
 ### Config Files
