@@ -2,8 +2,8 @@
 memoc: true
 type: worklog
 scope: project-memory
-created: 2026-06-13T06:48:29
-updated: 2026-06-13T06:48:29
+created: 2026-06-13T06:49:11
+updated: 2026-06-13T06:49:11
 status: active
 tags:
   - memoc
@@ -13,7 +13,7 @@ tags:
 
 Generated index of conflict-light per-actor work records.
 
-Last generated: 2026-06-13T06:48:29
+Last generated: 2026-06-13T06:49:11
 
 ## Layout
 
@@ -28,6 +28,7 @@ worklog/<actor>/YYYY-MM/YYYYMMDDTHHMM-title.md
 
 ## Recent Work
 
+- [Implement combo system and fever mode](douyun0623/2026-06/20260613T0649-implement-combo-system-and-fever-mode.md) — douyun0623 active.
 - [Implement magnet and giant star power-up items](douyun0623/2026-06/20260613T0648-implement-magnet-and-giant-star-power-up-items.md) — douyun0623 active.
 - [Implement dash stacks and automatic recharge system](douyun0623/2026-06/20260613T0646-implement-dash-stacks-and-automatic-recharge-system.md) — douyun0623 active.
 - [Disable screen shake on game over for cleaner restart UI](douyun0623/2026-06/20260613T0642-disable-screen-shake-on-game-over-for-cleaner-restart-ui.md) — douyun0623 active.

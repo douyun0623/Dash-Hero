@@ -19,11 +19,12 @@ Last synced: 2026-06-13T03:02:05
 - Resolved camera-scroll death dynamically via 650px radius spawn constraints, and disabled screen shaking during game-over scenes.
 - Implemented a 3-stack dash energy system with a visual HUD indicator and a 2.5s automatic recharge rate.
 - Refactored items to support Battery (70%), Magnet (15%, pulls items physically), and Giant Star (15%, 1.6x player size, invincibility).
+- Implemented a combo system (popup HUD on hits) and Fever Mode (triggered at 5 combos, granting 5s invincibility, 1.5x fast autoscroll, and a neon pink border effect).
 
 ## Project Snapshot
 
 <!-- memoc:snapshot:start -->
-- Last synced: 2026-06-13T06:48:12
+- Last synced: 2026-06-13T06:48:53
 - Detected stack: Not detected
 
 ### Config Files

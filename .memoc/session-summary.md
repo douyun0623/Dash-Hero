@@ -2,25 +2,25 @@
 memoc: true
 type: state
 scope: project-memory
-created: 2026-06-13T06:42:17
-updated: 2026-06-13T06:42:17
+created: 2026-06-13T06:48:53
+updated: 2026-06-13T06:48:53
 status: active
 tags:
   - memoc
   - memoc/state
 ---
 # Session Summary
-Last: 2026-06-13T06:42:17
+Last: 2026-06-13T06:48:53
 Replace, do not append. Keep <800B.
 History: worklog. Resume risks: 04-handoff.md.
 
 ## Status
-- Refactored items to support Battery, Magnet, and Giant Star. Implemented U-magnet and star drawing, item physical attraction physics, and HUD timer bars.
+- Dash stacks, Magnet/Star power-ups, and Combo/Fever mode are fully implemented and committed.
 
 ## Changed
-- Deleted Battery.kt; added Item.kt (BATTERY, MAGNET, STAR) with drawing and magnet attraction pull. Refactored PlatformManager to spawn items randomly. Integrated buff timers and size scaling (1.6x) on Player. Enabled giant mode to smash enemies.
+- Implemented a combo accumulator for player hits and bounces. Triggered a 5s Fever Mode at 5 combos, speeding up scroll by 1.5x and drawing a glowing neon pink screen border and text HUD.
 
 ## Open Tasks
 
 ## Resume
-- Magnet and Giant Star implementation complete and tested. Ready for 3rd phase (Combo and Fever mode).
+- All upgrades (stacks, magnet/star buffs, combo/fever) are completed. Game features are now in a highly polished, feature-rich state. Ready for next instructions.

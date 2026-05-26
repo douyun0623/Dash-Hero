@@ -104,6 +104,15 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         style = Paint.Style.STROKE
         strokeWidth = 6f
     }
+    
+    // 콤보 텍스트용 Paint 필드
+    private val comboPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.rgb(255, 128, 0)
+        textAlign = Paint.Align.CENTER
+        textSize = 70f
+        typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        setShadowLayer(8f, 0f, 0f, Color.BLACK)
+    }
 
     init {
         world.add(background, Layer.BG)
@@ -263,7 +272,9 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         val attemptedPlayerX = player.screenX
         val returnDistance = (beforePlayerX - attemptedPlayerX).coerceAtLeast(0f)
         val overflowDistance = player.clampForwardLimit(SCROLL_TRIGGER_X)
-        pendingScrollDistance += returnDistance + overflowDistance
+        // 피버 모드일 때는 대시 여부에 무관하게 최소 스크롤이 자동으로 계속 진행되어 가속 질주를 연출함
+        val feverAutoScroll = if (player.isFever) 1400f * gctx.frameTime else 0f
+        pendingScrollDistance += returnDistance + overflowDistance + feverAutoScroll
 
         val scrollStep = nextScrollStep(gctx.frameTime)
         if (scrollStep > 0f) {
@@ -327,6 +338,43 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
 
         val distanceInMeters = (totalDistance / 100f).toInt()
         canvas.drawText("${distanceInMeters}m", gctx.metrics.width / 2f, 150f, scorePaint)
+
+        // 콤보 팝업 UI 렌더링
+        val combo = player.comboCount
+        if (combo > 0) {
+            val ratio = player.comboTimer / 2.0f
+            val alpha = (ratio * 255).toInt().coerceIn(0, 255)
+            comboPaint.alpha = alpha
+            val scaleTextSize = 65f + 40f * ratio
+            comboPaint.textSize = scaleTextSize
+            
+            val tx = gctx.metrics.width / 2f
+            val ty = gctx.metrics.height / 2f - 240f
+            canvas.drawText("$combo COMBO!", tx, ty, comboPaint)
+        }
+
+        // 피버 타임 화면 테두리 네온 및 안내 텍스트 연출
+        if (player.isFever) {
+            val feverBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.rgb(255, 0, 128)
+                style = Paint.Style.STROKE
+                strokeWidth = 24f
+            }
+            val pulse = Math.abs(Math.sin(System.currentTimeMillis() * 0.01)).toFloat()
+            feverBorderPaint.alpha = (110 + 110 * pulse).toInt().coerceIn(0, 255)
+            
+            val borderRect = RectF(0f, 0f, gctx.metrics.width, gctx.metrics.height)
+            canvas.drawRect(borderRect, feverBorderPaint)
+            
+            val feverTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.rgb(255, 0, 128)
+                textAlign = Paint.Align.CENTER
+                textSize = 54f
+                typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+                setShadowLayer(10f, 0f, 0f, Color.WHITE)
+            }
+            canvas.drawText("FEVER TIME!!", gctx.metrics.width / 2f, 220f, feverTextPaint)
+        }
 
         canvas.drawText("Dash Hero", gctx.metrics.width / 2f, 360f, titlePaint)
         
