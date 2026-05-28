@@ -90,21 +90,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         style = Paint.Style.FILL
     }
     
-    // 대시 스택 UI용 Paint 필드
-    private val dashStackPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.rgb(255, 220, 0)
-        style = Paint.Style.FILL
-        setShadowLayer(6f, 0f, 0f, Color.rgb(255, 220, 0))
-    }
-    private val dashEmptyPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.argb(80, 255, 255, 255)
-        style = Paint.Style.FILL
-    }
-    private val dashRechargePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.rgb(255, 220, 0)
-        style = Paint.Style.STROKE
-        strokeWidth = 6f
-    }
+    
     
     // 콤보 텍스트용 Paint 필드
     private val comboPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -169,7 +155,6 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
                 when (item.type) {
                     ItemType.BATTERY -> {
                         totalDistance += 1000f
-                        player.chargeStack(1)
                     }
                     ItemType.MAGNET -> {
                         player.magnetTimeLeft = 6.0f
@@ -399,33 +384,10 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
             canvas.drawText("Score: ${distanceInMeters}m  (Best: ${bestScore}m)", gctx.metrics.width / 2f, gctx.metrics.height / 2f + 50f, gameOverScorePaint)
             canvas.drawText("Tap to Restart", gctx.metrics.width / 2f, gctx.metrics.height / 2f + 180f, bodyPaint)
         } else {
-            // 대시 스택 UI 렌더링 (화면 좌측 상단)
-            val startUiX = 80f
-            val uiY = 110f
-            val radius = 24f
-            val spacing = 64f
-            val maxStacks = 3
-            val currentStacks = player.currentDashStacks
-            
-            for (i in 0 until maxStacks) {
-                val cx = startUiX + i * spacing
-                if (i < currentStacks) {
-                    canvas.drawCircle(cx, uiY, radius, dashStackPaint)
-                } else {
-                    canvas.drawCircle(cx, uiY, radius, dashEmptyPaint)
-                    // 바로 다음 충전 중인 칸에 원형 충전 게이지 렌더링
-                    if (i == currentStacks) {
-                        val ratio = player.dashRechargeRatio
-                        val rect = RectF(cx - radius, uiY - radius, cx + radius, uiY + radius)
-                        canvas.drawArc(rect, -90f, 360f * ratio, false, dashRechargePaint)
-                    }
-                }
-            }
-            
-            // 버프 타이머 UI 렌더링 (대시 스택 오른쪽)
+            // 버프 타이머 UI 렌더링 (화면 좌측 상단)
             var buffOffset = 0f
             val buffUiY = 110f
-            val buffStartX = 300f
+            val buffStartX = 80f
             val barHeight = 16f
             val barMaxWidth = 100f
             

@@ -39,11 +39,7 @@ class Player(
     private var dashLockedY = y
     private var postDashInvincibleTime = 0f
     
-    // 대시 스택 및 자동 충전 필드
-    private val maxDashStacks = 3
-    private var dashStacks = maxDashStacks
-    private var dashRechargeTime = 0f
-    private val rechargeDuration = 1.5f
+
 
     // 파워업 버프 및 콤보/피버 시스템 필드
     var magnetTimeLeft = 0f
@@ -74,22 +70,14 @@ class Player(
         get() = y
     val currentVelocityY: Float
         get() = velocityY
-    val currentDashStacks: Int 
-        get() = dashStacks
-    val dashRechargeRatio: Float 
-        get() = (dashRechargeTime / rechargeDuration).coerceIn(0f, 1f)
+
 
     fun dash() {
-        if (dashStacks <= 0) return
-        dashStacks--
+        if (isDashing) return
         dashTimeLeft = dashDuration
         dashLockedY = y
         velocityY = 0f
         SoundEffects.playDash()
-    }
-
-    fun chargeStack(amount: Int) {
-        dashStacks = minOf(maxDashStacks, dashStacks + amount)
     }
 
     fun bounce() {
@@ -115,16 +103,7 @@ class Player(
     fun updateWithCollision(gctx: GameContext, platformManager: PlatformManager) {
         val dt = gctx.frameTime
 
-        // 대시 스택 자동 충전 업데이트
-        if (dashStacks < maxDashStacks) {
-            dashRechargeTime += dt
-            if (dashRechargeTime >= rechargeDuration) {
-                dashStacks++
-                dashRechargeTime = 0f
-            }
-        } else {
-            dashRechargeTime = 0f
-        }
+
 
         if (postDashInvincibleTime > 0f) {
             postDashInvincibleTime -= dt

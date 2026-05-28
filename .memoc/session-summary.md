@@ -15,12 +15,14 @@ Replace, do not append. Keep <800B.
 History: worklog. Resume risks: 04-handoff.md.
 
 ## Status
-- Dash stacks, Magnet/Star power-ups, and Combo/Fever mode are fully implemented and committed.
+- Dash recharge speed improved (1.5s) and fever-mode cliff death prevention implemented and committed.
 
 ## Changed
-- Implemented a combo accumulator for player hits and bounces. Triggered a 5s Fever Mode at 5 combos, speeding up scroll by 1.5x and drawing a glowing neon pink screen border and text HUD.
+- Reduced dash recharge from 2.5s to 1.5s for snappier gameplay.
+- Added safe platform patterns during fever mode (no gaps) and 2s safe cooldown after fever ends.
+- Added pending scroll dampening (70% reduction) on fever end.
 
 ## Open Tasks
 
 ## Resume
-- All upgrades (stacks, magnet/star buffs, combo/fever) are completed. Game features are now in a highly polished, feature-rich state. Ready for next instructions.
+- All gameplay feel improvements committed. Ready for next instructions.
