@@ -2,8 +2,8 @@
 memoc: true
 type: core
 scope: project-memory
-created: 2026-06-13T06:49:11
-updated: 2026-06-13T06:49:11
+created: 2026-06-13T09:21:16
+updated: 2026-06-13T09:21:16
 status: active
 tags:
   - memoc
@@ -13,10 +13,11 @@ tags:
 
 Generated shared activity index for memoc work logs.
 
-Last generated: 2026-06-13T06:49:11
+Last generated: 2026-06-13T09:21:16
 
 ## Recent Work
 
+- [Remove dash stacks and recharge system to allow unlimited dashing](worklog/douyun0623/2026-06/20260613T0921-remove-dash-stacks-and-recharge-system-to-allow-unlimited-dashing.md) — douyun0623 active.
 - [Implement combo system and fever mode](worklog/douyun0623/2026-06/20260613T0649-implement-combo-system-and-fever-mode.md) — douyun0623 active.
 - [Implement magnet and giant star power-up items](worklog/douyun0623/2026-06/20260613T0648-implement-magnet-and-giant-star-power-up-items.md) — douyun0623 active.
 - [Implement dash stacks and automatic recharge system](worklog/douyun0623/2026-06/20260613T0646-implement-dash-stacks-and-automatic-recharge-system.md) — douyun0623 active.
