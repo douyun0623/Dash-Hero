@@ -43,7 +43,7 @@ class Player(
     private val maxDashStacks = 3
     private var dashStacks = maxDashStacks
     private var dashRechargeTime = 0f
-    private val rechargeDuration = 2.5f
+    private val rechargeDuration = 1.5f
 
     // 파워업 버프 및 콤보/피버 시스템 필드
     var magnetTimeLeft = 0f

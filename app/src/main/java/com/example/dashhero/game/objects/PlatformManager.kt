@@ -28,6 +28,8 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
     private var patternIndex = 0
     private var spawnCount = 0 // 생성된 총 발판/슬롯 수
     var playerScreenX: Float = 180f
+    var isFeverMode: Boolean = false
+    private var safeScrollCooldown: Float = 0f
 
     init {
         // 초기 발판 생성 (화면을 채울 정도)
@@ -36,10 +38,30 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
         }
     }
 
+    fun updateSafeCooldown(dt: Float) {
+        if (safeScrollCooldown > 0f) {
+            safeScrollCooldown -= dt
+            if (safeScrollCooldown < 0f) safeScrollCooldown = 0f
+        }
+    }
+
+    fun startSafeCooldown(duration: Float) {
+        safeScrollCooldown = duration
+    }
+
+    private val safePatterns = listOf(
+        "XXXXXXXXXX",
+        "XXXHHHXXX"
+    )
+
     private fun spawnNext() {
         if (patternIndex >= currentPattern.length) {
-            // 새 패턴 조각 무작위 선택
-            currentPattern = patternPresets.random()
+            // 피버 중이거나 안전 쿨다운 중이면 gap 없는 안전 패턴만 사용
+            currentPattern = if (isFeverMode || safeScrollCooldown > 0f) {
+                safePatterns.random()
+            } else {
+                patternPresets.random()
+            }
             patternIndex = 0
         }
 

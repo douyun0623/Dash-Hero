@@ -62,6 +62,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
     private var pendingScrollDistance = 0f
     private var activeTrailStretch = 0f
     private var totalDistance = 0f
+    private var wasFever = false
 
     private val scorePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.YELLOW
@@ -147,6 +148,18 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         
         // 플레이어의 실시간 화면 X 좌표를 동기화하여 너무 가까운 곳에 적 스폰 억제 (복귀 억까 방지)
         platformManager.playerScreenX = player.screenX
+        // 피버 모드 상태를 PlatformManager에 동기화 (안전 패턴 강제용)
+        platformManager.isFeverMode = player.isFever
+        platformManager.updateSafeCooldown(gctx.frameTime)
+
+        // 피버 종료 감지: 이전 프레임에 피버였는데 이번 프레임에 아닌 경우
+        if (wasFever && !player.isFever) {
+            // 잔여 스크롤 70% 감쇠
+            pendingScrollDistance *= 0.3f
+            // 피버 종료 후 2초간 안전 패턴 유지
+            platformManager.startSafeCooldown(2.0f)
+        }
+        wasFever = player.isFever
 
         // 아이템 (배터리, 자석, 별)과의 충돌 판정
         for (item in platformManager.getItems()) {
