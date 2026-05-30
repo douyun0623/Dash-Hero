@@ -15,14 +15,15 @@ Replace, do not append. Keep <800B.
 History: worklog. Resume risks: 04-handoff.md.
 
 ## Status
-- Dash recharge speed improved (1.5s) and fever-mode cliff death prevention implemented and committed.
+- Unlimited dashing enabled. Fever mode trigger changed to collecting 5 Battery items.
 
 ## Changed
-- Reduced dash recharge from 2.5s to 1.5s for snappier gameplay.
-- Added safe platform patterns during fever mode (no gaps) and 2s safe cooldown after fever ends.
-- Added pending scroll dampening (70% reduction) on fever end.
+- Removed the dash stack/recharge system to enable unlimited dashing.
+- Replaced the combo-based fever mode trigger with a battery collectible requirement (5 batteries to trigger Fever).
+- Added a visual cyan battery gauge in the top-left UI to represent the collected battery count.
+- Kept the fever safety improvements (no gaps during fever, 70% scroll dampening, 2s safety cooldown).
 
 ## Open Tasks
 
 ## Resume
-- All gameplay feel improvements committed. Ready for next instructions.
+- All upgrades and gameplay balancing committed. Ready for next instructions.
