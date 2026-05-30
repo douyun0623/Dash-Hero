@@ -2,8 +2,8 @@
 memoc: true
 type: worklog
 scope: project-memory
-created: 2026-06-13T09:21:16
-updated: 2026-06-13T09:21:16
+created: 2026-06-13T09:24:52
+updated: 2026-06-13T09:24:52
 status: active
 tags:
   - memoc
@@ -13,7 +13,7 @@ tags:
 
 Generated index of conflict-light per-actor work records.
 
-Last generated: 2026-06-13T09:21:16
+Last generated: 2026-06-13T09:24:52
 
 ## Layout
 
@@ -28,6 +28,7 @@ worklog/<actor>/YYYY-MM/YYYYMMDDTHHMM-title.md
 
 ## Recent Work
 
+- [Change Fever Mode trigger from combo system to collecting 5 battery items](douyun0623/2026-06/20260613T0924-change-fever-mode-trigger-from-combo-system-to-collecting-5-battery-items.md) — douyun0623 active.
 - [Remove dash stacks and recharge system to allow unlimited dashing](douyun0623/2026-06/20260613T0921-remove-dash-stacks-and-recharge-system-to-allow-unlimited-dashing.md) — douyun0623 active.
 - [Implement combo system and fever mode](douyun0623/2026-06/20260613T0649-implement-combo-system-and-fever-mode.md) — douyun0623 active.
 - [Implement magnet and giant star power-up items](douyun0623/2026-06/20260613T0648-implement-magnet-and-giant-star-power-up-items.md) — douyun0623 active.
@@ -47,4 +48,3 @@ worklog/<actor>/YYYY-MM/YYYYMMDDTHHMM-title.md
 - [Implement visual effects (particles & screen shake)](douyun0623/2026-06/20260613T0445-implement-visual-effects-particles-screen-shake.md) — douyun0623 active.
 - [Implement retro sound effects using SoundPool](douyun0623/2026-06/20260613T0443-implement-retro-sound-effects-using-soundpool.md) — douyun0623 active.
 - [Implement procedural platform patterns and variable heights](douyun0623/2026-06/20260613T0441-implement-procedural-platform-patterns-and-variable-heights.md) — douyun0623 active.
-- [Stabilize collision detection and add return invincibility](douyun0623/2026-06/20260613T0410-stabilize-collision-detection-and-add-return-invincibility.md) — douyun0623 active.

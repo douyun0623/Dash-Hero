@@ -2,8 +2,8 @@
 memoc: true
 type: core
 scope: project-memory
-created: 2026-06-13T09:21:09
-updated: 2026-06-13T09:21:09
+created: 2026-06-13T09:24:44
+updated: 2026-06-13T09:24:44
 status: active
 tags:
   - memoc
