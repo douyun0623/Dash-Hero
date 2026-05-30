@@ -41,12 +41,11 @@ class Player(
     
 
 
-    // 파워업 버프 및 콤보/피버 시스템 필드
+    // 파워업 버프 및 피버 시스템 필드
     var magnetTimeLeft = 0f
     var giantTimeLeft = 0f
-    var comboCount = 0
-    var comboTimer = 0f
-    private val comboDuration = 2.0f
+    var feverBatteryCount = 0
+    val maxFeverBatteries = 5
     var feverTimeLeft = 0f
     private val feverDuration = 5.0f
 
@@ -119,13 +118,7 @@ class Player(
             giantTimeLeft -= dt
             if (giantTimeLeft < 0f) giantTimeLeft = 0f
         }
-        if (comboTimer > 0f) {
-            comboTimer -= dt
-            if (comboTimer <= 0f) {
-                comboTimer = 0f
-                comboCount = 0
-            }
-        }
+        
         if (feverTimeLeft > 0f) {
             feverTimeLeft -= dt
             if (feverTimeLeft < 0f) feverTimeLeft = 0f
@@ -231,23 +224,14 @@ class Player(
         canvas.drawRect(bb, debugPaint)
     }
 
-    fun addCombo() {
-        if (isFever) {
-            comboTimer = comboDuration
-            comboCount++
-            return
+    fun collectBattery() {
+        if (!isFever) {
+            feverBatteryCount++
+            if (feverBatteryCount >= maxFeverBatteries) {
+                feverBatteryCount = 0
+                feverTimeLeft = feverDuration
+                postDashInvincibleTime = feverDuration
+            }
         }
-        comboCount++
-        comboTimer = comboDuration
-        if (comboCount >= 5) {
-            triggerFever()
-        }
-    }
-
-    private fun triggerFever() {
-        feverTimeLeft = feverDuration
-        postDashInvincibleTime = feverDuration
-        comboCount = 5
-        comboTimer = feverDuration
     }
 }

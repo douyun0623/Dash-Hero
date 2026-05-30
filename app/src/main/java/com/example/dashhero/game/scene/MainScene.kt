@@ -92,14 +92,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
     
     
     
-    // 콤보 텍스트용 Paint 필드
-    private val comboPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.rgb(255, 128, 0)
-        textAlign = Paint.Align.CENTER
-        textSize = 70f
-        typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-        setShadowLayer(8f, 0f, 0f, Color.BLACK)
-    }
+    
 
     init {
         world.add(background, Layer.BG)
@@ -155,6 +148,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
                 when (item.type) {
                     ItemType.BATTERY -> {
                         totalDistance += 1000f
+                        player.collectBattery()
                     }
                     ItemType.MAGNET -> {
                         player.magnetTimeLeft = 6.0f
@@ -176,7 +170,6 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
                 if (player.isDashing || player.isGiant) {
                     // 1. 대시 공격 또는 거대화 무적 파쇄 (처치)
                     enemy.die()
-                    player.addCombo() // 콤보 증가
                     // 대시 타격 파티클 스폰 (주황색 & 보라색)
                     particleSystem.spawnExplosion(
                         enemy.x, enemy.y,
@@ -198,7 +191,6 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
                     if (isFallingRelative && (wasAbove || (overlapY < overlapX * 1.5f && playerBB.bottom <= enemyBB.centerY()))) {
                         // 2. 밟기 판정: 위에서 아래로 충돌했거나 밟기 영역 내일 때
                         player.bounce()
-                        player.addCombo() // 밟기 시 콤보 누적
                         SoundEffects.playStomp()
                         // 밟기 파티클 스폰 (연한 노란색 & 보라색)
                         particleSystem.spawnExplosion(
@@ -226,7 +218,6 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
                 
                 if (player.isDashing || player.isGiant) {
                     drone.die()
-                    player.addCombo() // 콤보 누적
                     particleSystem.spawnExplosion(
                         drone.x, drone.y,
                         intArrayOf(Color.rgb(255, 110, 70), Color.rgb(120, 80, 200)),
@@ -245,7 +236,6 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
                     
                     if (isFallingRelative && (wasAbove || (overlapY < overlapX * 1.5f && playerBB.bottom <= droneBB.centerY()))) {
                         player.bounce()
-                        player.addCombo() // 밟기 시 콤보 누적
                         SoundEffects.playStomp()
                         particleSystem.spawnExplosion(
                             drone.x, droneBB.top,
@@ -337,19 +327,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         val distanceInMeters = (totalDistance / 100f).toInt()
         canvas.drawText("${distanceInMeters}m", gctx.metrics.width / 2f, 150f, scorePaint)
 
-        // 콤보 팝업 UI 렌더링
-        val combo = player.comboCount
-        if (combo > 0) {
-            val ratio = player.comboTimer / 2.0f
-            val alpha = (ratio * 255).toInt().coerceIn(0, 255)
-            comboPaint.alpha = alpha
-            val scaleTextSize = 65f + 40f * ratio
-            comboPaint.textSize = scaleTextSize
-            
-            val tx = gctx.metrics.width / 2f
-            val ty = gctx.metrics.height / 2f - 240f
-            canvas.drawText("$combo COMBO!", tx, ty, comboPaint)
-        }
+        
 
         // 피버 타임 화면 테두리 네온 및 안내 텍스트 연출
         if (player.isFever) {
@@ -384,10 +362,41 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
             canvas.drawText("Score: ${distanceInMeters}m  (Best: ${bestScore}m)", gctx.metrics.width / 2f, gctx.metrics.height / 2f + 50f, gameOverScorePaint)
             canvas.drawText("Tap to Restart", gctx.metrics.width / 2f, gctx.metrics.height / 2f + 180f, bodyPaint)
         } else {
-            // 버프 타이머 UI 렌더링 (화면 좌측 상단)
+            // 피버 배터리 게이지 UI 렌더링 (화면 좌측 상단)
+            val startUiX = 80f
+            val uiY = 110f
+            val spacing = 64f
+            val currentFeverBatteries = player.feverBatteryCount
+            
+            val feverBatteryPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.rgb(0, 220, 255) // Cyan glowing battery
+                style = Paint.Style.FILL
+                setShadowLayer(8f, 0f, 0f, Color.rgb(0, 220, 255))
+            }
+            val feverEmptyPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.argb(60, 255, 255, 255)
+                style = Paint.Style.FILL
+            }
+            
+            val rectWidth = 40f
+            val rectHeight = 24f
+            for (i in 0 until player.maxFeverBatteries) {
+                val rx = startUiX + i * spacing
+                val rect = RectF(rx - rectWidth/2f, uiY - rectHeight/2f, rx + rectWidth/2f, uiY + rectHeight/2f)
+                if (i < currentFeverBatteries) {
+                    canvas.drawRoundRect(rect, 6f, 6f, feverBatteryPaint)
+                    // Draw a small cap on the right
+                    canvas.drawRect(rx + rectWidth/2f, uiY - 5f, rx + rectWidth/2f + 4f, uiY + 5f, feverBatteryPaint)
+                } else {
+                    canvas.drawRoundRect(rect, 6f, 6f, feverEmptyPaint)
+                    canvas.drawRect(rx + rectWidth/2f, uiY - 5f, rx + rectWidth/2f + 4f, uiY + 5f, feverEmptyPaint)
+                }
+            }
+
+            // 버프 타이머 UI 렌더링 (피버 배터리 게이지 오른쪽)
             var buffOffset = 0f
             val buffUiY = 110f
-            val buffStartX = 80f
+            val buffStartX = 420f
             val barHeight = 16f
             val barMaxWidth = 100f
             
