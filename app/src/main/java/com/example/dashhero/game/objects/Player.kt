@@ -72,7 +72,6 @@ class Player(
 
 
     fun dash() {
-        if (isDashing) return
         dashTimeLeft = dashDuration
         dashLockedY = y
         velocityY = 0f
