@@ -2,8 +2,8 @@
 memoc: true
 type: core
 scope: project-memory
-created: 2026-06-13T09:43:39
-updated: 2026-06-13T09:43:39
+created: 2026-06-13T10:13:41
+updated: 2026-06-13T10:13:41
 status: active
 tags:
   - memoc
@@ -13,10 +13,11 @@ tags:
 
 Generated shared activity index for memoc work logs.
 
-Last generated: 2026-06-13T09:43:39
+Last generated: 2026-06-13T10:13:41
 
 ## Recent Work
 
+- [Add Spike obstacle to ground platforms requiring player to jump over](worklog/douyun0623/2026-06/20260613T1013-add-spike-obstacle-to-ground-platforms-requiring-player-to-jump-over.md) — douyun0623 active.
 - [Allow dash chaining to enable smooth continuous dashing](worklog/douyun0623/2026-06/20260613T0943-allow-dash-chaining-to-enable-smooth-continuous-dashing.md) — douyun0623 active.
 - [Change Fever Mode trigger from combo system to collecting 5 battery items](worklog/douyun0623/2026-06/20260613T0924-change-fever-mode-trigger-from-combo-system-to-collecting-5-battery-items.md) — douyun0623 active.
 - [Remove dash stacks and recharge system to allow unlimited dashing](worklog/douyun0623/2026-06/20260613T0921-remove-dash-stacks-and-recharge-system-to-allow-unlimited-dashing.md) — douyun0623 active.
@@ -36,7 +37,6 @@ Last generated: 2026-06-13T09:43:39
 - [Implement TitleScene and HighScoreManager](worklog/douyun0623/2026-06/20260613T0459-implement-titlescene-and-highscoremanager.md) — douyun0623 active.
 - [Balance player jump height and platform height offsets](worklog/douyun0623/2026-06/20260613T0451-balance-player-jump-height-and-platform-height-offsets.md) — douyun0623 active.
 - [Implement visual effects (particles & screen shake)](worklog/douyun0623/2026-06/20260613T0445-implement-visual-effects-particles-screen-shake.md) — douyun0623 active.
-- [Implement retro sound effects using SoundPool](worklog/douyun0623/2026-06/20260613T0443-implement-retro-sound-effects-using-soundpool.md) — douyun0623 active.
 
 ## Related
 
