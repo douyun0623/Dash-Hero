@@ -9,6 +9,7 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
     private val enemies = mutableListOf<Enemy>()
     private val items = mutableListOf<Item>()
     private val flyingEnemies = mutableListOf<DroneEnemy>()
+    private val spikes = mutableListOf<Spike>()
     private var lastX = 0f
     private val unitWidth = 200f
     private val platformHeight = 60f
@@ -99,6 +100,8 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
                     items.add(Item(centerX, targetY - 140f, itemType))
                 } else if (!isTooClose && spawnCount > 5 && rand < 0.55) { // 너무 가깝지 않을 때만 공중 적 배치
                     flyingEnemies.add(DroneEnemy(centerX, targetY - 260f))
+                } else if (!isTooClose && spawnCount > 5 && rand < 0.75) { // 너무 가깝지 않을 때만 가시 배치
+                    spikes.add(Spike(centerX, targetY - 60f))
                 }
             }
         } else {
@@ -130,6 +133,7 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
         enemies.forEach { it.scrollBy(distance) }
         items.forEach { it.scrollBy(distance) }
         flyingEnemies.forEach { it.scrollBy(distance) }
+        spikes.forEach { it.scrollBy(distance) }
         
         // 부족한 발판 보충
         while (lastX < screenWidth * 1.5f) {
@@ -141,6 +145,7 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
         enemies.removeAll { it.isOffScreen() }
         items.removeAll { it.isOffScreen() || !it.isAlive }
         flyingEnemies.removeAll { it.isOffScreen() }
+        spikes.removeAll { it.isOffScreen() }
     }
 
     fun updateEnemies(gctx: GameContext) {
@@ -153,6 +158,7 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
         items.forEach { it.updateWithMagnet(playerX, playerY, isMagnetActive, dt) }
     }
     fun getFlyingEnemies(): List<DroneEnemy> = flyingEnemies
+    fun getSpikes(): List<Spike> = spikes
 
     override fun update(gctx: GameContext) {
         // PlatformManager 자체의 update에서는 스크롤 처리를 MainScene에서 scrollBy로 호출하므로 
@@ -160,6 +166,7 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
         platforms.forEach { it.update(gctx) }
         items.forEach { it.update(gctx) }
         flyingEnemies.forEach { it.update(gctx) }
+        spikes.forEach { it.update(gctx) }
     }
 
     override fun draw(canvas: Canvas) {
@@ -167,5 +174,6 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
         items.forEach { it.draw(canvas) }
         flyingEnemies.forEach { it.draw(canvas) }
         enemies.forEach { it.draw(canvas) }
+        spikes.forEach { it.draw(canvas) }
     }
 }

@@ -15,6 +15,7 @@ import com.example.dashhero.game.objects.PlatformManager
 import com.example.dashhero.game.objects.Player
 import com.example.dashhero.game.objects.Item
 import com.example.dashhero.game.objects.ItemType
+import com.example.dashhero.game.objects.Spike
 import com.example.dashhero.game.sound.SoundEffects
 import com.example.dashhero.game.util.HighScoreManager
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.collidesWith
@@ -248,6 +249,25 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
                     } else {
                         triggerGameOver()
                     }
+                }
+            }
+        }
+
+        // 가시 장애물과의 충돌 판정
+        for (spike in platformManager.getSpikes()) {
+            if (spike.isAlive && player.collidesWith(spike)) {
+                if (player.isGiant || player.isFever) {
+                    spike.die()
+                    SoundEffects.playStomp()
+                    particleSystem.spawnExplosion(
+                        spike.x, spike.y,
+                        intArrayOf(Color.rgb(255, 60, 60), Color.rgb(110, 120, 130)),
+                        15
+                    )
+                    triggerShake(0.12f, 10f)
+                } else {
+                    // 일반 대시 상태 포함 일반 상태에서는 통과하지 못하고 충돌 사망 (점프 회피 강제)
+                    triggerGameOver()
                 }
             }
         }
