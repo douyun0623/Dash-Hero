@@ -11,7 +11,7 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
     private val flyingEnemies = mutableListOf<DroneEnemy>()
     private val spikes = mutableListOf<Spike>()
     private var lastX = 0f
-    private val unitWidth = 200f
+    private val unitWidth = 280f
     private val platformHeight = 60f
     private val platformY = 1210f
     
