@@ -15,14 +15,15 @@ Replace, do not append. Keep <800B.
 History: worklog. Resume risks: 04-handoff.md.
 
 ## Status
-- Unlimited dashing enabled. Fever mode trigger...
+- Unlimited dashing, battery-triggered fever, and dangerous Spikes obstacles fully implemented and committed.
 
 ## Changed
-- Removed the dash stack/recharge system to ena...
-- Replaced the combo-based fever mode trigger w...
+- Implemented a dangerous static Spike obstacle on ground platforms that requires jumping to dodge.
+- Dashing through Spikes results in game over, forcing players to jump.
+- Giant and Fever modes allow the player to destroy Spikes with retro physics and particles.
+- Kept previous enhancements (unlimited dashing, battery fever trigger, fever safety patterns).
 
 ## Open Tasks
-_Current open tasks only._
 
 ## Resume
-- All upgrades and gameplay balancing committed...
+- All upgrades, gameplay balancing, and Spikes obstacle additions are committed. Ready for next instructions.
