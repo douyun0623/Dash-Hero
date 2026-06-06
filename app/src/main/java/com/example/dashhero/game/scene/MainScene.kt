@@ -309,6 +309,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         dashTrail.setTail(trailTailX, player.screenY)
 
         if (wasDashing && !player.isDashing) {
+            pendingScrollDistance = 0f
             // 끝날 때의 Head 위치 고정
             dashTrail.finish(trailHeadX, player.screenY)
         }
