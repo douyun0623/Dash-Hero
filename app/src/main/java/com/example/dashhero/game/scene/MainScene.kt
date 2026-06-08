@@ -282,9 +282,15 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         val overflowDistance = player.clampForwardLimit(SCROLL_TRIGGER_X)
         // 피버 모드일 때는 대시 여부에 무관하게 최소 스크롤이 자동으로 계속 진행되어 가속 질주를 연출함
         val feverAutoScroll = if (player.isFever) 1400f * gctx.frameTime else 0f
-        pendingScrollDistance += returnDistance + overflowDistance + feverAutoScroll
+        
+        // overflow와 fever는 부드러운 이징을 위해 누적
+        pendingScrollDistance += overflowDistance + feverAutoScroll
 
-        val scrollStep = nextScrollStep(gctx.frameTime)
+        // 플레이어의 복귀 거리는 즉각 1:1로 매핑하여 화면 미끄러짐(관성 스크롤)을 완전 제거
+        val instantScroll = returnDistance
+        val easedScroll = nextScrollStep(gctx.frameTime)
+        val scrollStep = instantScroll + easedScroll
+        
         if (scrollStep > 0f) {
             background.scrollBy(scrollStep * BG_SCROLL_RATIO)
             platformManager.scrollBy(scrollStep)
