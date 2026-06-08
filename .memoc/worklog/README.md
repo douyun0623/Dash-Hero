@@ -2,8 +2,8 @@
 memoc: true
 type: worklog
 scope: project-memory
-created: 2026-06-13T13:45:16
-updated: 2026-06-13T13:45:16
+created: 2026-06-13T13:59:09
+updated: 2026-06-13T13:59:09
 status: active
 tags:
   - memoc
@@ -13,7 +13,7 @@ tags:
 
 Generated index of conflict-light per-actor work records.
 
-Last generated: 2026-06-13T13:45:16
+Last generated: 2026-06-13T13:59:09
 
 ## Layout
 
@@ -28,6 +28,7 @@ worklog/<actor>/YYYY-MM/YYYYMMDDTHHMM-title.md
 
 ## Recent Work
 
+- [Eliminate camera sliding during player dash return phase by using instant scroll](douyun0623/2026-06/20260613T1359-eliminate-camera-sliding-during-player-dash-return-phase-by-using-instant-scroll.md) — douyun0623 active.
 - [Prevent camera scroll overshoot when player ends dash](douyun0623/2026-06/20260613T1345-prevent-camera-scroll-overshoot-when-player-ends-dash.md) — douyun0623 active.
 - [Increase ground platform unitWidth to 280f for wider landing areas](douyun0623/2026-06/20260613T1034-increase-ground-platform-unitwidth-to-280f-for-wider-landing-areas.md) — douyun0623 active.
 - [Add Spike obstacle to ground platforms requiring player to jump over](douyun0623/2026-06/20260613T1013-add-spike-obstacle-to-ground-platforms-requiring-player-to-jump-over.md) — douyun0623 active.
@@ -47,4 +48,3 @@ worklog/<actor>/YYYY-MM/YYYYMMDDTHHMM-title.md
 - [Implement flying DroneEnemy and integrate in PlatformManager spawning](douyun0623/2026-06/20260613T0502-implement-flying-droneenemy-and-integrate-in-platformmanager-spawning.md) — douyun0623 active.
 - [Implement collectible Battery item and playCollect audio feedback](douyun0623/2026-06/20260613T0501-implement-collectible-battery-item-and-playcollect-audio-feedback.md) — douyun0623 active.
 - [Implement transparent Pause overlay scene and Pause system](douyun0623/2026-06/20260613T0500-implement-transparent-pause-overlay-scene-and-pause-system.md) — douyun0623 active.
-- [Implement TitleScene and HighScoreManager](douyun0623/2026-06/20260613T0459-implement-titlescene-and-highscoremanager.md) — douyun0623 active.

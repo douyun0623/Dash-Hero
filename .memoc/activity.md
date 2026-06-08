@@ -2,8 +2,8 @@
 memoc: true
 type: core
 scope: project-memory
-created: 2026-06-13T13:45:16
-updated: 2026-06-13T13:45:16
+created: 2026-06-13T13:59:09
+updated: 2026-06-13T13:59:09
 status: active
 tags:
   - memoc
@@ -13,10 +13,11 @@ tags:
 
 Generated shared activity index for memoc work logs.
 
-Last generated: 2026-06-13T13:45:16
+Last generated: 2026-06-13T13:59:09
 
 ## Recent Work
 
+- [Eliminate camera sliding during player dash return phase by using instant scroll](worklog/douyun0623/2026-06/20260613T1359-eliminate-camera-sliding-during-player-dash-return-phase-by-using-instant-scroll.md) — douyun0623 active.
 - [Prevent camera scroll overshoot when player ends dash](worklog/douyun0623/2026-06/20260613T1345-prevent-camera-scroll-overshoot-when-player-ends-dash.md) — douyun0623 active.
 - [Increase ground platform unitWidth to 280f for wider landing areas](worklog/douyun0623/2026-06/20260613T1034-increase-ground-platform-unitwidth-to-280f-for-wider-landing-areas.md) — douyun0623 active.
 - [Add Spike obstacle to ground platforms requiring player to jump over](worklog/douyun0623/2026-06/20260613T1013-add-spike-obstacle-to-ground-platforms-requiring-player-to-jump-over.md) — douyun0623 active.
@@ -36,7 +37,6 @@ Last generated: 2026-06-13T13:45:16
 - [Implement flying DroneEnemy and integrate in PlatformManager spawning](worklog/douyun0623/2026-06/20260613T0502-implement-flying-droneenemy-and-integrate-in-platformmanager-spawning.md) — douyun0623 active.
 - [Implement collectible Battery item and playCollect audio feedback](worklog/douyun0623/2026-06/20260613T0501-implement-collectible-battery-item-and-playcollect-audio-feedback.md) — douyun0623 active.
 - [Implement transparent Pause overlay scene and Pause system](worklog/douyun0623/2026-06/20260613T0500-implement-transparent-pause-overlay-scene-and-pause-system.md) — douyun0623 active.
-- [Implement TitleScene and HighScoreManager](worklog/douyun0623/2026-06/20260613T0459-implement-titlescene-and-highscoremanager.md) — douyun0623 active.
 
 ## Related
 
