@@ -189,7 +189,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
                     val wasAbove = prevPlayerBottom <= prevEnemyTop + 15f
                     val isFallingRelative = (player.currentVelocityY - enemy.currentVelocityY) > -100f
                     
-                    if (isFallingRelative && (wasAbove || (overlapY < overlapX * 1.5f && playerBB.bottom <= enemyBB.centerY()))) {
+                    if (isFallingRelative && (wasAbove || playerBB.bottom <= enemyBB.centerY())) {
                         // 2. 밟기 판정: 위에서 아래로 충돌했거나 밟기 영역 내일 때
                         player.bounce()
                         SoundEffects.playStomp()
@@ -235,7 +235,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
                     val wasAbove = prevPlayerBottom <= prevDroneTop + 15f
                     val isFallingRelative = (player.currentVelocityY - drone.currentVelocityY) > -100f
                     
-                    if (isFallingRelative && (wasAbove || (overlapY < overlapX * 1.5f && playerBB.bottom <= droneBB.centerY()))) {
+                    if (isFallingRelative && (wasAbove || playerBB.bottom <= droneBB.centerY())) {
                         player.bounce()
                         SoundEffects.playStomp()
                         particleSystem.spawnExplosion(
