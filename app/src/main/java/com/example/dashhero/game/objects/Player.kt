@@ -123,9 +123,24 @@ class Player(
             if (feverTimeLeft < 0f) feverTimeLeft = 0f
         }
 
-        // 현재 위치에서의 발판 확인
+        // 현재 위치에서의 발판 확인 (피버타임 시 낙사 방지용 가상 바닥 제공)
         val currentPlatform = platformManager.getPlatformAt(x)
-        val platformTopY = currentPlatform?.topY ?: Float.MAX_VALUE
+        val platformTopY = if (currentPlatform != null) {
+            currentPlatform.topY
+        } else if (isFever) {
+            1210f // 기본 발판 Y 높이
+        } else {
+            Float.MAX_VALUE
+        }
+
+        // 피버타임 진입 시 이미 바닥 아래로 떨어진 경우 강제 구출 (Snap-up)
+        if (isFever && y > 1210f - height / 2f) {
+            y = 1210f - height / 2f
+            velocityY = 0f
+            if (crouchTimeLeft <= 0f) {
+                crouchTimeLeft = crouchDuration
+            }
+        }
 
         if (isDashing) {
             y = dashLockedY
