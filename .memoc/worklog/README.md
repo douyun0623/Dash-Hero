@@ -2,8 +2,8 @@
 memoc: true
 type: worklog
 scope: project-memory
-created: 2026-06-13T13:59:09
-updated: 2026-06-13T13:59:09
+created: 2026-06-13T14:02:51
+updated: 2026-06-13T14:02:51
 status: active
 tags:
   - memoc
@@ -13,7 +13,7 @@ tags:
 
 Generated index of conflict-light per-actor work records.
 
-Last generated: 2026-06-13T13:59:09
+Last generated: 2026-06-13T14:02:51
 
 ## Layout
 
@@ -28,6 +28,7 @@ worklog/<actor>/YYYY-MM/YYYYMMDDTHHMM-title.md
 
 ## Recent Work
 
+- [Improve enemy stomp collision logic to prevent back corner deaths](douyun0623/2026-06/20260613T1402-improve-enemy-stomp-collision-logic-to-prevent-back-corner-deaths.md) — douyun0623 active.
 - [Eliminate camera sliding during player dash return phase by using instant scroll](douyun0623/2026-06/20260613T1359-eliminate-camera-sliding-during-player-dash-return-phase-by-using-instant-scroll.md) — douyun0623 active.
 - [Prevent camera scroll overshoot when player ends dash](douyun0623/2026-06/20260613T1345-prevent-camera-scroll-overshoot-when-player-ends-dash.md) — douyun0623 active.
 - [Increase ground platform unitWidth to 280f for wider landing areas](douyun0623/2026-06/20260613T1034-increase-ground-platform-unitwidth-to-280f-for-wider-landing-areas.md) — douyun0623 active.
@@ -47,4 +48,3 @@ worklog/<actor>/YYYY-MM/YYYYMMDDTHHMM-title.md
 - [Adjust score text size and position for better readability](douyun0623/2026-06/20260613T0547-adjust-score-text-size-and-position-for-better-readability.md) — douyun0623 active.
 - [Implement flying DroneEnemy and integrate in PlatformManager spawning](douyun0623/2026-06/20260613T0502-implement-flying-droneenemy-and-integrate-in-platformmanager-spawning.md) — douyun0623 active.
 - [Implement collectible Battery item and playCollect audio feedback](douyun0623/2026-06/20260613T0501-implement-collectible-battery-item-and-playcollect-audio-feedback.md) — douyun0623 active.
-- [Implement transparent Pause overlay scene and Pause system](douyun0623/2026-06/20260613T0500-implement-transparent-pause-overlay-scene-and-pause-system.md) — douyun0623 active.
