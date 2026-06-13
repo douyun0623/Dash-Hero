@@ -12,6 +12,7 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 class SpikyEnemy(
     var x: Float,
     var y: Float,
+    var parentPlatform: GroundPlatform? = null
 ) : IGameObject, IBoxCollidable {
     enum class State {
         ALIVE, DEAD
@@ -37,12 +38,15 @@ class SpikyEnemy(
     private var rotation = 0f
     private var rotationSpeed = 0f
 
+    private var relativeX = if (parentPlatform != null) x - parentPlatform!!.x else 0f
+
     val isAlive: Boolean get() = state == State.ALIVE
     val currentVelocityY: Float get() = velocityY
 
     fun die() {
         if (state == State.DEAD) return
         state = State.DEAD
+        parentPlatform = null
         velocityX = 1200f // 오른쪽으로 날아감
         velocityY = -1000f // 위로 튀어오름
         rotationSpeed = 720f // 초당 2회전
@@ -50,7 +54,9 @@ class SpikyEnemy(
 
     fun scrollBy(distance: Float) {
         if (state == State.ALIVE) {
-            x -= distance
+            if (parentPlatform == null) {
+                x -= distance
+            }
         }
     }
 
@@ -65,9 +71,26 @@ class SpikyEnemy(
             return
         }
 
-        x += velocityX * dt
+        if (parentPlatform != null && parentPlatform!!.isFell) {
+            parentPlatform = null
+        }
 
-        val currentPlatform = platformManager.getPlatformAt(x)
+        if (parentPlatform != null) {
+            relativeX += velocityX * dt
+            val halfW = parentPlatform!!.width / 2f
+            if (relativeX < -halfW + width / 2f) {
+                relativeX = -halfW + width / 2f
+                velocityX = -velocityX
+            } else if (relativeX > halfW - width / 2f) {
+                relativeX = halfW - width / 2f
+                velocityX = -velocityX
+            }
+            x = parentPlatform!!.x + relativeX
+        } else {
+            x += velocityX * dt
+        }
+
+        val currentPlatform = parentPlatform ?: platformManager.getPlatformAt(x)
         val platformTopY = currentPlatform?.topY ?: Float.MAX_VALUE
 
         if (platformTopY == Float.MAX_VALUE) {

@@ -12,6 +12,7 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 class Spike(
     var x: Float,
     var y: Float,
+    var parentPlatform: GroundPlatform? = null
 ) : IGameObject, IBoxCollidable {
     enum class State {
         ALIVE, DEAD
@@ -21,6 +22,9 @@ class Spike(
     private val height = 60f
     private val bounds = RectF()
     private var state = State.ALIVE
+
+    private val relativeX = if (parentPlatform != null) x - parentPlatform!!.x else 0f
+    private val relativeY = if (parentPlatform != null) y - parentPlatform!!.y else 0f
     
     // For hit/death animation (spinning off-screen like enemies)
     private var velocityX = 0f
@@ -41,7 +45,9 @@ class Spike(
 
     fun scrollBy(distance: Float) {
         if (state == State.ALIVE) {
-            x -= distance
+            if (parentPlatform == null) {
+                x -= distance
+            }
         }
     }
 
@@ -56,6 +62,13 @@ class Spike(
             x += velocityX * dt
             y += velocityY * dt
             rotation += rotationSpeed * dt
+        } else if (parentPlatform != null) {
+            if (parentPlatform!!.isFell) {
+                parentPlatform = null
+            } else {
+                x = parentPlatform!!.x + relativeX
+                y = parentPlatform!!.y + relativeY
+            }
         }
     }
 

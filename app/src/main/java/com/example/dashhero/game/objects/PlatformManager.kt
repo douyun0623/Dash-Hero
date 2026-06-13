@@ -88,7 +88,8 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
                 randType < 0.95 -> PlatformType.CRUMBLING
                 else -> PlatformType.TRAMPOLINE
             }
-            platforms.add(GroundPlatform(centerX, targetY, unitWidth + 2f, platformHeight, platformType)) // 이음새 방지를 위해 +2f
+            val platform = GroundPlatform(centerX, targetY, unitWidth + 2f, platformHeight, platformType)
+            platforms.add(platform) // 이음새 방지를 위해 +2f
             
             // 플레이어와의 거리가 650px 이하인 너무 가까운 경우 적 스폰을 제한하여 복귀 시 억까 방지
             val distanceToPlayer = centerX - playerScreenX
@@ -100,9 +101,9 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
             val enemySpawned = !isTooClose && spawnCount > 5 && Math.random() < adjustedEnemySpawnChance
             if (enemySpawned) {
                 if (Math.random() < 0.35) {
-                    spikyEnemies.add(SpikyEnemy(centerX, targetY - 200f))
+                    spikyEnemies.add(SpikyEnemy(centerX, targetY - 200f, platform))
                 } else {
-                    enemies.add(Enemy(centerX, targetY - 200f))
+                    enemies.add(Enemy(centerX, targetY - 200f, platform))
                 }
             } else {
                 val rand = Math.random()
@@ -115,11 +116,11 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
                         randType < 0.85 -> ItemType.MAGNET
                         else -> ItemType.STAR
                     }
-                    items.add(Item(centerX, targetY - 140f, itemType))
+                    items.add(Item(centerX, targetY - 140f, itemType, platform))
                 } else if (!isTooClose && spawnCount > 5 && rand < 0.35 + droneChance) { // 너무 가깝지 않을 때만 공중 적 배치
                     flyingEnemies.add(DroneEnemy(centerX, targetY - 260f))
                 } else if (!isTooClose && spawnCount > 5 && rand < 0.35 + droneChance + spikeChance) { // 너무 가깝지 않을 때만 가시 배치
-                    spikes.add(Spike(centerX, targetY - 60f))
+                    spikes.add(Spike(centerX, targetY - 60f, platform))
                 }
             }
         } else {

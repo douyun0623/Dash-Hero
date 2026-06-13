@@ -2,8 +2,8 @@
 memoc: true
 type: worklog
 scope: project-memory
-created: 2026-06-13T15:22:10
-updated: 2026-06-13T15:22:10
+created: 2026-06-13T15:37:23
+updated: 2026-06-13T15:37:23
 status: active
 tags:
   - memoc
@@ -13,7 +13,7 @@ tags:
 
 Generated index of conflict-light per-actor work records.
 
-Last generated: 2026-06-13T15:22:10
+Last generated: 2026-06-13T15:37:23
 
 ## Layout
 
@@ -28,6 +28,7 @@ worklog/<actor>/YYYY-MM/YYYYMMDDTHHMM-title.md
 
 ## Recent Work
 
+- [sync-spawned-objects-position-with-moving-platforms](douyun0623/2026-06/20260613T1537-sync-spawned-objects-position-with-moving-platforms.md) — douyun0623 active.
 - [relax-platform-collision-detection-and-adjust-spawn-rates](douyun0623/2026-06/20260613T1522-relax-platform-collision-detection-and-adjust-spawn-rates.md) — douyun0623 active.
 - [implement-moving-crumbling-and-trampoline-platforms](douyun0623/2026-06/20260613T1513-implement-moving-crumbling-and-trampoline-platforms.md) — douyun0623 active.
 - [Change SpikyEnemy to trigger gameover on lateral hits](douyun0623/2026-06/20260613T1500-change-spikyenemy-to-trigger-gameover-on-lateral-hits.md) — douyun0623 active.
@@ -47,4 +48,3 @@ worklog/<actor>/YYYY-MM/YYYYMMDDTHHMM-title.md
 - [Implement combo system and fever mode](douyun0623/2026-06/20260613T0649-implement-combo-system-and-fever-mode.md) — douyun0623 active.
 - [Implement magnet and giant star power-up items](douyun0623/2026-06/20260613T0648-implement-magnet-and-giant-star-power-up-items.md) — douyun0623 active.
 - [Implement dash stacks and automatic recharge system](douyun0623/2026-06/20260613T0646-implement-dash-stacks-and-automatic-recharge-system.md) — douyun0623 active.
-- [Disable screen shake on game over for cleaner restart UI](douyun0623/2026-06/20260613T0642-disable-screen-shake-on-game-over-for-cleaner-restart-ui.md) — douyun0623 active.

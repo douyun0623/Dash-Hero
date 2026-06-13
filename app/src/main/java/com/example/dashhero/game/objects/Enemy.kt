@@ -13,6 +13,7 @@ import kotlin.math.sin
 class Enemy(
     var x: Float,
     var y: Float,
+    var parentPlatform: GroundPlatform? = null
 ) : IGameObject, IBoxCollidable {
     enum class State {
         ALIVE, DEAD
@@ -36,12 +37,15 @@ class Enemy(
     private var rotation = 0f
     private var rotationSpeed = 0f
 
+    private val relativeX = if (parentPlatform != null) x - parentPlatform!!.x else 0f
+
     val isAlive: Boolean get() = state == State.ALIVE
     val currentVelocityY: Float get() = velocityY
 
     fun die() {
         if (state == State.DEAD) return
         state = State.DEAD
+        parentPlatform = null
         velocityX = 1200f // 오른쪽으로 날아감
         velocityY = -1000f // 위로 튀어오름
         rotationSpeed = 720f // 초당 2회전
@@ -49,7 +53,9 @@ class Enemy(
 
     fun scrollBy(distance: Float) {
         if (state == State.ALIVE) {
-            x -= distance
+            if (parentPlatform == null) {
+                x -= distance
+            }
         }
     }
 
@@ -64,8 +70,16 @@ class Enemy(
             return
         }
 
+        if (parentPlatform != null) {
+            if (parentPlatform!!.isFell) {
+                parentPlatform = null
+            } else {
+                x = parentPlatform!!.x + relativeX
+            }
+        }
+
         // ALIVE 상태: 발판 위에서 점프
-        val currentPlatform = platformManager.getPlatformAt(x)
+        val currentPlatform = parentPlatform ?: platformManager.getPlatformAt(x)
         val platformTopY = currentPlatform?.topY ?: Float.MAX_VALUE
 
         if (crouchTimeLeft > 0f) {
@@ -87,7 +101,7 @@ class Enemy(
             val nextY = y + velocityY * dt
             val landingY = platformTopY - height / 2f
 
-            if (velocityY >= 0 && y <= landingY + 10f && nextY >= landingY) {
+            if (velocityY >= 0 && y <= landingY + 20f && nextY >= landingY) {
                 y = landingY
                 velocityY = 0f
                 crouchTimeLeft = crouchDuration

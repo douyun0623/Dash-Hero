@@ -18,13 +18,17 @@ enum class ItemType {
 class Item(
     var x: Float,
     var y: Float,
-    val type: ItemType
+    val type: ItemType,
+    var parentPlatform: GroundPlatform? = null
 ) : IGameObject, IBoxCollidable {
     private val width = 50f
     private val height = 75f
     private val bounds = RectF()
     var isAlive = true
         private set
+
+    private val relativeX = if (parentPlatform != null) x - parentPlatform!!.x else 0f
+    private val relativeY = if (parentPlatform != null) y - parentPlatform!!.y else 0f
 
     // --- Paint Styles ---
     private val batteryBodyPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -66,7 +70,9 @@ class Item(
     }
 
     fun scrollBy(distance: Float) {
-        x -= distance
+        if (parentPlatform == null) {
+            x -= distance
+        }
     }
 
     fun isOffScreen(): Boolean {
@@ -74,8 +80,17 @@ class Item(
     }
 
     fun updateWithMagnet(playerX: Float, playerY: Float, isMagnetActive: Boolean, dt: Float) {
-        // 부유 효과 (둥둥 떠 있는 연출)
-        y += Math.sin(System.currentTimeMillis() * 0.007).toFloat() * 0.4f
+        val bobOffset = Math.sin(System.currentTimeMillis() * 0.007).toFloat() * 15f
+        if (parentPlatform != null) {
+            if (parentPlatform!!.isFell) {
+                parentPlatform = null
+            } else {
+                x = parentPlatform!!.x + relativeX
+                y = parentPlatform!!.y + relativeY + bobOffset
+            }
+        } else {
+            y += Math.sin(System.currentTimeMillis() * 0.007).toFloat() * 0.4f
+        }
 
         // 자석이 켜져 있으면 플레이어를 향해 빨려 들어감
         if (isMagnetActive && isAlive) {
@@ -83,7 +98,7 @@ class Item(
             val dy = playerY - y
             val dist = Math.sqrt((dx * dx + dy * dy).toDouble()).toFloat()
             if (dist < 750f && dist > 10f) {
-                // 가까울수록 더 강하게 빨아들임
+                parentPlatform = null
                 val pullSpeed = 1600f
                 x += (dx / dist) * pullSpeed * dt
                 y += (dy / dist) * pullSpeed * dt
@@ -92,7 +107,17 @@ class Item(
     }
 
     override fun update(gctx: GameContext) {
-        y += Math.sin(System.currentTimeMillis() * 0.007).toFloat() * 0.4f
+        val bobOffset = Math.sin(System.currentTimeMillis() * 0.007).toFloat() * 15f
+        if (parentPlatform != null) {
+            if (parentPlatform!!.isFell) {
+                parentPlatform = null
+            } else {
+                x = parentPlatform!!.x + relativeX
+                y = parentPlatform!!.y + relativeY + bobOffset
+            }
+        } else {
+            y += Math.sin(System.currentTimeMillis() * 0.007).toFloat() * 0.4f
+        }
     }
 
     override fun draw(canvas: Canvas) {
