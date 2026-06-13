@@ -2,8 +2,8 @@
 memoc: true
 type: core
 scope: project-memory
-created: 2026-06-13T14:02:51
-updated: 2026-06-13T14:02:51
+created: 2026-06-13T14:06:14
+updated: 2026-06-13T14:06:14
 status: active
 tags:
   - memoc
@@ -13,10 +13,11 @@ tags:
 
 Generated shared activity index for memoc work logs.
 
-Last generated: 2026-06-13T14:02:51
+Last generated: 2026-06-13T14:06:14
 
 ## Recent Work
 
+- [Implement virtual transparent floor during fever mode to prevent falling deaths](worklog/douyun0623/2026-06/20260613T1406-implement-virtual-transparent-floor-during-fever-mode-to-prevent-falling-deaths.md) — douyun0623 active.
 - [Improve enemy stomp collision logic to prevent back corner deaths](worklog/douyun0623/2026-06/20260613T1402-improve-enemy-stomp-collision-logic-to-prevent-back-corner-deaths.md) — douyun0623 active.
 - [Eliminate camera sliding during player dash return phase by using instant scroll](worklog/douyun0623/2026-06/20260613T1359-eliminate-camera-sliding-during-player-dash-return-phase-by-using-instant-scroll.md) — douyun0623 active.
 - [Prevent camera scroll overshoot when player ends dash](worklog/douyun0623/2026-06/20260613T1345-prevent-camera-scroll-overshoot-when-player-ends-dash.md) — douyun0623 active.
@@ -36,7 +37,6 @@ Last generated: 2026-06-13T14:02:51
 - [Implement looping BGM using Android MediaPlayer and lifecycle control](worklog/douyun0623/2026-06/20260613T0554-implement-looping-bgm-using-android-mediaplayer-and-lifecycle-control.md) — douyun0623 active.
 - [Adjust score text size and position for better readability](worklog/douyun0623/2026-06/20260613T0547-adjust-score-text-size-and-position-for-better-readability.md) — douyun0623 active.
 - [Implement flying DroneEnemy and integrate in PlatformManager spawning](worklog/douyun0623/2026-06/20260613T0502-implement-flying-droneenemy-and-integrate-in-platformmanager-spawning.md) — douyun0623 active.
-- [Implement collectible Battery item and playCollect audio feedback](worklog/douyun0623/2026-06/20260613T0501-implement-collectible-battery-item-and-playcollect-audio-feedback.md) — douyun0623 active.
 
 ## Related
 
