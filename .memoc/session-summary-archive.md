@@ -257,3 +257,71 @@ History: worklog. Resume risks: 04-handoff.md.
 
 ## Resume
 - All upgrades, gameplay balancing, and Spikes obstacle additions are committed. Ready for next instructions.
+
+## [2026-06-13T14:51:15] archived summary (782B)
+
+---
+memoc: true
+type: state
+scope: project-memory
+created: 2026-06-13T10:34:41
+updated: 2026-06-13T10:34:41
+status: active
+tags:
+  - memoc
+  - memoc/state
+---
+# Session Summary
+Last: 2026-06-13T14:16:15
+Replace, do not append. Keep <800B.
+History: worklog. Resume risks: 04-handoff.md.
+
+## Status
+- Completed dynamic scaling difficulty, GameOver restart delay, custom buff trail colors, and Top 3 Leaderboard.
+
+## Changed
+- Added difficulty-based speed boosts and obstacle scaling.
+- Added 0.5s touch restart delay after game over.
+- Trail color now reflects player state (Fever: Pink, Giant: Gold, Magnet: Blue).
+- Leaderboard panel added to TitleScene displaying top 3 high scores.
+
+## Open Tasks
+_None_
+
+## Resume
+- All changes are fully implemented and verified via unit tests.
+
+## [2026-06-13T14:53:38] archived summary (933B)
+
+---
+memoc: true
+type: state
+scope: project-memory
+created: 2026-06-13T14:51:15
+updated: 2026-06-13T14:51:15
+updated: 2026-06-13T14:51:25
+status: active
+tags:
+  - memoc
+  - memoc/state
+---
+# Session Summary
+Last: 2026-06-13T14:51:25
+Replace, do not append. Keep <800B.
+History: worklog. Resume risks: 04-handoff.md.
+
+## Status
+- Completed dynamic difficulty scaling, GameOver restart delay, custom trail colors, Leaderboard, and ShieldEnemy.
+
+## Changed
+- Added difficulty-based speed boosts and obstacle scaling.
+- Added 0.5s touch restart delay after game over.
+- Trail color now reflects player state (Fever: Pink, Giant: Gold, Magnet: Blue).
+- Leaderboard panel added to TitleScene displaying top 3 high scores.
+- Implemented ShieldEnemy which blocks front/dash attacks, but serves as a stomp springboard (stays alive).
+
+## Open Tasks
+_None_
+
+## Resume
+- All features are implemented, verified by unit tests, and compile clean...
