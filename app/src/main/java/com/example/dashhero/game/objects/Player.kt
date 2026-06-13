@@ -27,7 +27,7 @@ class Player(
     private val dashDuration = 0.24f
     private val baseX = x
     private val dashLeadX = 620f
-    private val dashMoveSpeed = 1500f
+    var dashMoveSpeed = 1500f
     private val returnEase = 8.5f
     private val returnMinSpeed = 120f
     private val returnSnapDistance = 1.5f
@@ -89,6 +89,12 @@ class Player(
             x = limitX
         }
         return overflow
+    }
+
+    fun limitX(maxX: Float) {
+        if (x > maxX) {
+            x = maxX
+        }
     }
 
     override fun update(gctx: GameContext) {

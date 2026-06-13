@@ -24,9 +24,9 @@ class DashTrail : IGameObject {
     private var widthScale = 0f
     private var emissiveScale = 0f
     private val ribbonPath = Path()
+    var color: Int = Color.rgb(255, 110, 70)
 
     private val ribbonPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.rgb(255, 110, 70)
         style = Paint.Style.FILL
     }
 
@@ -108,6 +108,7 @@ class DashTrail : IGameObject {
         ribbonPath.lineTo(tail.x - normalX * tailHalfWidth, tail.y - normalY * tailHalfWidth)
         ribbonPath.close()
 
+        ribbonPaint.color = color
         ribbonPaint.alpha = (190 * alphaScale).toInt().coerceIn(0, 255)
         canvas.drawPath(ribbonPath, ribbonPaint)
     }

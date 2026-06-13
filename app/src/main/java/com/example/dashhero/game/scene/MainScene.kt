@@ -16,6 +16,7 @@ import com.example.dashhero.game.objects.Player
 import com.example.dashhero.game.objects.Item
 import com.example.dashhero.game.objects.ItemType
 import com.example.dashhero.game.objects.Spike
+import com.example.dashhero.game.objects.SpikyEnemy
 import com.example.dashhero.game.sound.SoundEffects
 import com.example.dashhero.game.util.HighScoreManager
 import kr.ac.tukorea.ge.spgp2026.a2dg.objects.collidesWith
@@ -64,6 +65,8 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
     private var activeTrailStretch = 0f
     private var totalDistance = 0f
     private var wasFever = false
+    private var gameOverTime = 0f
+    private var difficultyLevel = 0
 
     private val scorePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.YELLOW
@@ -104,13 +107,30 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
     }
 
     override fun update(gctx: GameContext) {
-        if (state == State.GAME_OVER) return
+        if (state == State.GAME_OVER) {
+            gameOverTime += gctx.frameTime
+            return
+        }
 
         if (shakeTimeLeft > 0f) {
             shakeTimeLeft -= gctx.frameTime
             if (shakeTimeLeft <= 0f) {
                 shakeTimeLeft = 0f
             }
+        }
+
+        // 1. 난이도 계산 및 플레이어/플랫폼 매니저 동기화
+        val distanceInMeters = (totalDistance / 100f).toInt()
+        difficultyLevel = (distanceInMeters / 200).coerceAtMost(5)
+        player.dashMoveSpeed = 1500f + difficultyLevel * 200f
+        platformManager.difficultyLevel = difficultyLevel
+
+        // 대시 트레일 색상 동적 설정 (피버: 네온 핑크, 거대화: 황금색, 자석: 파란색, 기본: 주황)
+        dashTrail.color = when {
+            player.isFever -> Color.rgb(255, 0, 128)
+            player.isGiant -> Color.rgb(255, 170, 0)
+            player.isMagnetActive -> Color.rgb(60, 150, 255)
+            else -> Color.rgb(255, 110, 70)
         }
 
         val beforePlayerX = player.screenX
@@ -121,6 +141,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         background.update(gctx)
         platformManager.update(gctx)
         platformManager.updateEnemies(gctx)
+        platformManager.updateSpikyEnemies(gctx)
         platformManager.updateItems(player.screenX, player.screenY, player.isMagnetActive, gctx.frameTime)
         particleSystem.update(gctx)
         dashTrail.update(gctx)
@@ -253,6 +274,52 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
             }
         }
 
+        // 가시 적과의 충돌 판정
+        for (spikyEnemy in platformManager.getSpikyEnemies()) {
+            if (spikyEnemy.isAlive && player.collidesWith(spikyEnemy)) {
+                val enemyBB = spikyEnemy.getBoundingBox()
+                
+                if (player.isGiant || player.isFever) {
+                    // 거대화 또는 피버 상태일 때는 무적 파쇄 (처치)
+                    spikyEnemy.die()
+                    SoundEffects.playStomp()
+                    particleSystem.spawnExplosion(
+                        spikyEnemy.x, spikyEnemy.y,
+                        intArrayOf(Color.rgb(255, 75, 50), Color.rgb(100, 110, 120)),
+                        25
+                    )
+                    triggerShake(0.18f, 22f)
+                } else {
+                    val overlapX = minOf(playerBB.right, enemyBB.right) - maxOf(playerBB.left, enemyBB.left)
+                    val overlapY = minOf(playerBB.bottom, enemyBB.bottom) - maxOf(playerBB.top, enemyBB.top)
+                    
+                    val prevPlayerBottom = playerBB.bottom - player.currentVelocityY * dt
+                    val prevEnemyTop = enemyBB.top - spikyEnemy.currentVelocityY * dt
+                    
+                    val wasAbove = prevPlayerBottom <= prevEnemyTop + 15f
+                    val isFallingRelative = (player.currentVelocityY - spikyEnemy.currentVelocityY) > -100f
+                    
+                    if (isFallingRelative && (wasAbove || playerBB.bottom <= enemyBB.centerY())) {
+                        // 밟기 판정: 처치하지 않고 그냥 튀어오르기만 함 (넘어가기)
+                        player.bounce()
+                        SoundEffects.playStomp()
+                        // 밟기 이펙트 (다홍색 스파크)
+                        particleSystem.spawnExplosion(
+                            spikyEnemy.x, enemyBB.top,
+                            intArrayOf(Color.rgb(255, 75, 50), Color.rgb(255, 255, 255)),
+                            10
+                        )
+                        triggerShake(0.12f, 10f)
+                    } else if (player.isReturning || (player.isInvincible && !player.isDashing)) {
+                        // 복귀 중이거나 대시 직후 무적 상태일 때는 패스스루
+                    } else {
+                        // 대시 중이거나 일반 러닝 중일 때 가시에 찔려 사망 (게임 오버!)
+                        triggerGameOver()
+                    }
+                }
+            }
+        }
+
         // 가시 장애물과의 충돌 판정
         for (spike in platformManager.getSpikes()) {
             if (spike.isAlive && player.collidesWith(spike)) {
@@ -334,7 +401,8 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
 
         val easedStep = pendingScrollDistance * SCROLL_EASE * dt
         val minStep = SCROLL_MIN_SPEED * dt
-        val maxStep = SCROLL_MAX_SPEED * dt
+        val maxSpeed = SCROLL_MAX_SPEED + difficultyLevel * 200f
+        val maxStep = maxSpeed * dt
         val scrollStep = minOf(maxOf(easedStep, minStep), maxStep, pendingScrollDistance)
 
         pendingScrollDistance -= scrollStep
@@ -455,6 +523,7 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
     private fun triggerGameOver() {
         if (state == State.GAME_OVER) return
         state = State.GAME_OVER
+        gameOverTime = 0f
         SoundEffects.playGameOver()
 
         // Save high score
@@ -470,7 +539,9 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
             if (state == State.GAME_OVER) {
-                gctx.sceneStack.change(MainScene(gctx))
+                if (gameOverTime >= RESTART_DELAY) {
+                    gctx.sceneStack.change(MainScene(gctx))
+                }
                 return true
             }
 
@@ -510,5 +581,6 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
         private const val SCROLL_MAX_SPEED = 2400f
         private const val MAX_TRAIL_STRETCH = 300f
         private const val TRAIL_STRETCH_SPEED = 1800f
+        private const val RESTART_DELAY = 0.5f
     }
 }

@@ -10,6 +10,7 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
     private val items = mutableListOf<Item>()
     private val flyingEnemies = mutableListOf<DroneEnemy>()
     private val spikes = mutableListOf<Spike>()
+    private val spikyEnemies = mutableListOf<SpikyEnemy>()
     private var lastX = 0f
     private val unitWidth = 280f
     private val platformHeight = 60f
@@ -30,6 +31,7 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
     private var spawnCount = 0 // 생성된 총 발판/슬롯 수
     var playerScreenX: Float = 180f
     var isFeverMode: Boolean = false
+    var difficultyLevel: Int = 0
     private var safeScrollCooldown: Float = 0f
 
     init {
@@ -84,12 +86,18 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
             
             // 초기 5개 슬롯 이후부터 적 스폰
             // 고지대('H')에서는 조금 더 높은 확률(40%)로 적 배치
-            val spawnChance = if (char == 'H') 0.4 else 0.3
-            val enemySpawned = !isTooClose && spawnCount > 5 && Math.random() < spawnChance
+            val adjustedEnemySpawnChance = (if (char == 'H') 0.4 else 0.3) + difficultyLevel * 0.05
+            val enemySpawned = !isTooClose && spawnCount > 5 && Math.random() < adjustedEnemySpawnChance
             if (enemySpawned) {
-                enemies.add(Enemy(centerX, targetY - 200f))
+                if (Math.random() < 0.35) {
+                    spikyEnemies.add(SpikyEnemy(centerX, targetY - 200f))
+                } else {
+                    enemies.add(Enemy(centerX, targetY - 200f))
+                }
             } else {
                 val rand = Math.random()
+                val droneChance = 0.20 + difficultyLevel * 0.04
+                val spikeChance = 0.20 + difficultyLevel * 0.04
                 if (spawnCount > 2 && rand < 0.35) {
                     val randType = Math.random()
                     val itemType = when {
@@ -98,9 +106,9 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
                         else -> ItemType.STAR
                     }
                     items.add(Item(centerX, targetY - 140f, itemType))
-                } else if (!isTooClose && spawnCount > 5 && rand < 0.55) { // 너무 가깝지 않을 때만 공중 적 배치
+                } else if (!isTooClose && spawnCount > 5 && rand < 0.35 + droneChance) { // 너무 가깝지 않을 때만 공중 적 배치
                     flyingEnemies.add(DroneEnemy(centerX, targetY - 260f))
-                } else if (!isTooClose && spawnCount > 5 && rand < 0.75) { // 너무 가깝지 않을 때만 가시 배치
+                } else if (!isTooClose && spawnCount > 5 && rand < 0.35 + droneChance + spikeChance) { // 너무 가깝지 않을 때만 가시 배치
                     spikes.add(Spike(centerX, targetY - 60f))
                 }
             }
@@ -109,7 +117,8 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
             val centerX = lastX + unitWidth / 2f
             val distanceToPlayer = centerX - playerScreenX
             val isTooClose = distanceToPlayer < 650f
-            if (!isTooClose && spawnCount > 5 && Math.random() < 0.4) {
+            val adjustedGapDroneChance = 0.4 + difficultyLevel * 0.04
+            if (!isTooClose && spawnCount > 5 && Math.random() < adjustedGapDroneChance) {
                 flyingEnemies.add(DroneEnemy(centerX, platformY - 260f))
             }
         }
@@ -134,6 +143,7 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
         items.forEach { it.scrollBy(distance) }
         flyingEnemies.forEach { it.scrollBy(distance) }
         spikes.forEach { it.scrollBy(distance) }
+        spikyEnemies.forEach { it.scrollBy(distance) }
         
         // 부족한 발판 보충
         while (lastX < screenWidth * 1.5f) {
@@ -146,13 +156,19 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
         items.removeAll { it.isOffScreen() || !it.isAlive }
         flyingEnemies.removeAll { it.isOffScreen() }
         spikes.removeAll { it.isOffScreen() }
+        spikyEnemies.removeAll { it.isOffScreen() }
     }
 
     fun updateEnemies(gctx: GameContext) {
         enemies.forEach { it.updateWithCollision(gctx, this) }
     }
+
+    fun updateSpikyEnemies(gctx: GameContext) {
+        spikyEnemies.forEach { it.updateWithCollision(gctx, this) }
+    }
     
     fun getEnemies(): List<Enemy> = enemies
+    fun getSpikyEnemies(): List<SpikyEnemy> = spikyEnemies
     fun getItems(): List<Item> = items
     fun updateItems(playerX: Float, playerY: Float, isMagnetActive: Boolean, dt: Float) {
         items.forEach { it.updateWithMagnet(playerX, playerY, isMagnetActive, dt) }
@@ -167,6 +183,7 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
         items.forEach { it.update(gctx) }
         flyingEnemies.forEach { it.update(gctx) }
         spikes.forEach { it.update(gctx) }
+        spikyEnemies.forEach { it.update(gctx) }
     }
 
     override fun draw(canvas: Canvas) {
@@ -175,5 +192,6 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
         flyingEnemies.forEach { it.draw(canvas) }
         enemies.forEach { it.draw(canvas) }
         spikes.forEach { it.draw(canvas) }
+        spikyEnemies.forEach { it.draw(canvas) }
     }
 }
