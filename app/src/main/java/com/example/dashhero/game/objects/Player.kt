@@ -164,8 +164,14 @@ class Player(
                 crouchTimeLeft -= dt
                 if (crouchTimeLeft <= 0f) {
                     crouchTimeLeft = 0f
-                    velocityY = jumpVelocity
-                    SoundEffects.playJump()
+                    val isTrampoline = currentPlatform?.type == PlatformType.TRAMPOLINE
+                    if (isTrampoline) {
+                        velocityY = jumpVelocity * 1.5f
+                        SoundEffects.playStomp()
+                    } else {
+                        velocityY = jumpVelocity
+                        SoundEffects.playJump()
+                    }
                 }
             } else {
                 // 발판이 없으면 웅크리기 무시하고 추락

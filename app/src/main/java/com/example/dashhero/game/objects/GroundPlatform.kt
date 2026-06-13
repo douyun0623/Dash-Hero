@@ -11,7 +11,8 @@ enum class PlatformType {
     NORMAL,
     MOVING_X,
     MOVING_Y,
-    CRUMBLING
+    CRUMBLING,
+    TRAMPOLINE
 }
 
 class GroundPlatform(
@@ -33,6 +34,9 @@ class GroundPlatform(
         get() = x
     private val bounds = RectF()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val springPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.rgb(255, 215, 0) // Gold/Yellow for spring bar
+    }
     var scrollSpeed = 0f
 
     fun scrollBy(distance: Float) {
@@ -73,6 +77,7 @@ class GroundPlatform(
                         isFell = true
                         y += 1000f * gctx.frameTime
                     } else {
+                        // Crumble shake effect
                         val shake = Math.sin(time.toDouble() * 60.0).toFloat() * 4f
                         x = baseX + shake
                     }
@@ -102,10 +107,17 @@ class GroundPlatform(
                     Color.rgb(220, 120, 70)
                 }
             }
+            PlatformType.TRAMPOLINE -> Color.rgb(180, 80, 180)
         }
 
         bounds.set(x - width / 2f, y - height / 2f, x + width / 2f, y + height / 2f)
         canvas.drawRoundRect(bounds, 24f, 24f, paint)
+
+        if (type == PlatformType.TRAMPOLINE) {
+            val barHeight = 10f
+            bounds.set(x - width / 2.5f, y - height / 2f, x + width / 2.5f, y - height / 2f + barHeight)
+            canvas.drawRoundRect(bounds, 5f, 5f, springPaint)
+        }
     }
 
     val topY: Float

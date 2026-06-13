@@ -82,10 +82,11 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
             val platformType = when {
                 spawnCount <= 5 -> PlatformType.NORMAL
                 isFeverMode -> PlatformType.NORMAL
-                randType < 0.70 -> PlatformType.NORMAL
-                randType < 0.80 -> PlatformType.MOVING_X
-                randType < 0.90 -> PlatformType.MOVING_Y
-                else -> PlatformType.CRUMBLING
+                randType < 0.60 -> PlatformType.NORMAL
+                randType < 0.70 -> PlatformType.MOVING_X
+                randType < 0.80 -> PlatformType.MOVING_Y
+                randType < 0.90 -> PlatformType.CRUMBLING
+                else -> PlatformType.TRAMPOLINE
             }
             platforms.add(GroundPlatform(centerX, targetY, unitWidth + 2f, platformHeight, platformType)) // 이음새 방지를 위해 +2f
             
