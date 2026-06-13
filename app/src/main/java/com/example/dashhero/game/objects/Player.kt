@@ -184,6 +184,7 @@ class Player(
                 y = landingY
                 velocityY = 0f
                 crouchTimeLeft = crouchDuration
+                currentPlatform?.stepOn()
             } else {
                 y = nextY
             }

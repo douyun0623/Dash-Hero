@@ -10,7 +10,8 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 enum class PlatformType {
     NORMAL,
     MOVING_X,
-    MOVING_Y
+    MOVING_Y,
+    CRUMBLING
 }
 
 class GroundPlatform(
@@ -23,6 +24,10 @@ class GroundPlatform(
     var baseX = x
     var baseY = y
     private var time = 0f
+    
+    var isCrumbling = false
+    var crumbleTimer = 0.8f
+    var isFell = false
 
     val screenX: Float
         get() = x
@@ -33,6 +38,12 @@ class GroundPlatform(
     fun scrollBy(distance: Float) {
         x -= distance
         baseX -= distance
+    }
+
+    fun stepOn() {
+        if (type == PlatformType.CRUMBLING && !isCrumbling) {
+            isCrumbling = true
+        }
     }
 
     override fun update(gctx: GameContext) {
@@ -55,6 +66,18 @@ class GroundPlatform(
                 val speed = 1.8f
                 y = baseY + Math.sin(time.toDouble() * speed).toFloat() * range
             }
+            PlatformType.CRUMBLING -> {
+                if (isCrumbling) {
+                    crumbleTimer -= gctx.frameTime
+                    if (crumbleTimer <= 0f) {
+                        isFell = true
+                        y += 1000f * gctx.frameTime
+                    } else {
+                        val shake = Math.sin(time.toDouble() * 60.0).toFloat() * 4f
+                        x = baseX + shake
+                    }
+                }
+            }
             else -> {
                 x = baseX
                 y = baseY
@@ -63,9 +86,22 @@ class GroundPlatform(
     }
 
     override fun draw(canvas: Canvas) {
+        if (isFell) return
+
         paint.color = when (type) {
             PlatformType.NORMAL -> Color.rgb(80, 180, 120)
             PlatformType.MOVING_X, PlatformType.MOVING_Y -> Color.rgb(70, 160, 220)
+            PlatformType.CRUMBLING -> {
+                if (isCrumbling) {
+                    if ((time * 10).toInt() % 2 == 0) {
+                        Color.rgb(220, 70, 70)
+                    } else {
+                        Color.rgb(220, 120, 70)
+                    }
+                } else {
+                    Color.rgb(220, 120, 70)
+                }
+            }
         }
 
         bounds.set(x - width / 2f, y - height / 2f, x + width / 2f, y + height / 2f)
@@ -73,7 +109,7 @@ class GroundPlatform(
     }
 
     val topY: Float
-        get() = y - height / 2f
+        get() = if (isFell) Float.MAX_VALUE else y - height / 2f
 
     fun isOffScreen(): Boolean {
         return x + width / 2f < -100f
