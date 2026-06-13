@@ -2,8 +2,8 @@
 memoc: true
 type: worklog
 scope: project-memory
-created: 2026-06-13T14:06:14
-updated: 2026-06-13T14:06:14
+created: 2026-06-13T15:13:21
+updated: 2026-06-13T15:13:21
 status: active
 tags:
   - memoc
@@ -13,7 +13,7 @@ tags:
 
 Generated index of conflict-light per-actor work records.
 
-Last generated: 2026-06-13T14:06:14
+Last generated: 2026-06-13T15:13:21
 
 ## Layout
 
@@ -28,6 +28,12 @@ worklog/<actor>/YYYY-MM/YYYYMMDDTHHMM-title.md
 
 ## Recent Work
 
+- [implement-moving-crumbling-and-trampoline-platforms](douyun0623/2026-06/20260613T1513-implement-moving-crumbling-and-trampoline-platforms.md) — douyun0623 active.
+- [Change SpikyEnemy to trigger gameover on lateral hits](douyun0623/2026-06/20260613T1500-change-spikyenemy-to-trigger-gameover-on-lateral-hits.md) — douyun0623 active.
+- [Fix ShieldEnemy collision to block active dashes](douyun0623/2026-06/20260613T1453-fix-shieldenemy-collision-to-block-active-dashes.md) — douyun0623 active.
+- [Implement ShieldEnemy that blocks dash and allows stomping bounce](douyun0623/2026-06/20260613T1451-implement-shieldenemy-that-blocks-dash-and-allows-stomping-bounce.md) — douyun0623 active.
+- [Implement Custom Trail Colors and Top 3 Leaderboard](douyun0623/2026-06/20260613T1416-implement-custom-trail-colors-and-top-3-leaderboard.md) — douyun0623 active.
+- [Implement Progressive Difficulty and GameOver Restart Delay](douyun0623/2026-06/20260613T1411-implement-progressive-difficulty-and-gameover-restart-delay.md) — douyun0623 active.
 - [Implement virtual transparent floor during fever mode to prevent falling deaths](douyun0623/2026-06/20260613T1406-implement-virtual-transparent-floor-during-fever-mode-to-prevent-falling-deaths.md) — douyun0623 active.
 - [Improve enemy stomp collision logic to prevent back corner deaths](douyun0623/2026-06/20260613T1402-improve-enemy-stomp-collision-logic-to-prevent-back-corner-deaths.md) — douyun0623 active.
 - [Eliminate camera sliding during player dash return phase by using instant scroll](douyun0623/2026-06/20260613T1359-eliminate-camera-sliding-during-player-dash-return-phase-by-using-instant-scroll.md) — douyun0623 active.
@@ -42,9 +48,3 @@ worklog/<actor>/YYYY-MM/YYYYMMDDTHHMM-title.md
 - [Implement dash stacks and automatic recharge system](douyun0623/2026-06/20260613T0646-implement-dash-stacks-and-automatic-recharge-system.md) — douyun0623 active.
 - [Disable screen shake on game over for cleaner restart UI](douyun0623/2026-06/20260613T0642-disable-screen-shake-on-game-over-for-cleaner-restart-ui.md) — douyun0623 active.
 - [Implement dynamic distance-based spawning safety rule to prevent scroll deaths while keeping gameplay difficulty](douyun0623/2026-06/20260613T0627-implement-dynamic-distance-based-spawning-safety-rule-to-prevent-scroll-deaths-w.md) — douyun0623 active.
-- [Implement structural safe zone by preventing enemy spawn during player dash and return](douyun0623/2026-06/20260613T0622-implement-structural-safe-zone-by-preventing-enemy-spawn-during-player-dash-and-.md) — douyun0623 active.
-- [Improve post-dash invincibility and balance drone spawn heights](douyun0623/2026-06/20260613T0609-improve-post-dash-invincibility-and-balance-drone-spawn-heights.md) — douyun0623 active.
-- [Finalize README.md with 100 percent progress and update features](douyun0623/2026-06/20260613T0555-finalize-readme-md-with-100-percent-progress-and-update-features.md) — douyun0623 active.
-- [Implement looping BGM using Android MediaPlayer and lifecycle control](douyun0623/2026-06/20260613T0554-implement-looping-bgm-using-android-mediaplayer-and-lifecycle-control.md) — douyun0623 active.
-- [Adjust score text size and position for better readability](douyun0623/2026-06/20260613T0547-adjust-score-text-size-and-position-for-better-readability.md) — douyun0623 active.
-- [Implement flying DroneEnemy and integrate in PlatformManager spawning](douyun0623/2026-06/20260613T0502-implement-flying-droneenemy-and-integrate-in-platformmanager-spawning.md) — douyun0623 active.
