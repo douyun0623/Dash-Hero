@@ -82,10 +82,10 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
             val platformType = when {
                 spawnCount <= 5 -> PlatformType.NORMAL
                 isFeverMode -> PlatformType.NORMAL
-                randType < 0.60 -> PlatformType.NORMAL
-                randType < 0.70 -> PlatformType.MOVING_X
-                randType < 0.80 -> PlatformType.MOVING_Y
-                randType < 0.90 -> PlatformType.CRUMBLING
+                randType < 0.80 -> PlatformType.NORMAL
+                randType < 0.85 -> PlatformType.MOVING_X
+                randType < 0.90 -> PlatformType.MOVING_Y
+                randType < 0.95 -> PlatformType.CRUMBLING
                 else -> PlatformType.TRAMPOLINE
             }
             platforms.add(GroundPlatform(centerX, targetY, unitWidth + 2f, platformHeight, platformType)) // 이음새 방지를 위해 +2f
@@ -138,12 +138,14 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
         spawnCount++
     }
 
-    fun getPlatformAt(x: Float): GroundPlatform? {
+    fun getPlatformAt(x: Float, playerWidth: Float = 140f): GroundPlatform? {
+        val halfW = playerWidth / 2f
+        val tolerance = 25f // 25px tolerance margin to prevent walking on thin air
         return platforms.find { p ->
             if (p.isFell) return@find false
             val left = p.screenX - p.width / 2f
             val right = p.screenX + p.width / 2f
-            x in left..right
+            (x - halfW + tolerance) <= right && (x + halfW - tolerance) >= left
         }
     }
 

@@ -2,8 +2,8 @@
 memoc: true
 type: core
 scope: project-memory
-created: 2026-06-13T15:13:21
-updated: 2026-06-13T15:13:21
+created: 2026-06-13T15:22:10
+updated: 2026-06-13T15:22:10
 status: active
 tags:
   - memoc
@@ -13,10 +13,11 @@ tags:
 
 Generated shared activity index for memoc work logs.
 
-Last generated: 2026-06-13T15:13:21
+Last generated: 2026-06-13T15:22:10
 
 ## Recent Work
 
+- [relax-platform-collision-detection-and-adjust-spawn-rates](worklog/douyun0623/2026-06/20260613T1522-relax-platform-collision-detection-and-adjust-spawn-rates.md) — douyun0623 active.
 - [implement-moving-crumbling-and-trampoline-platforms](worklog/douyun0623/2026-06/20260613T1513-implement-moving-crumbling-and-trampoline-platforms.md) — douyun0623 active.
 - [Change SpikyEnemy to trigger gameover on lateral hits](worklog/douyun0623/2026-06/20260613T1500-change-spikyenemy-to-trigger-gameover-on-lateral-hits.md) — douyun0623 active.
 - [Fix ShieldEnemy collision to block active dashes](worklog/douyun0623/2026-06/20260613T1453-fix-shieldenemy-collision-to-block-active-dashes.md) — douyun0623 active.
@@ -36,7 +37,6 @@ Last generated: 2026-06-13T15:13:21
 - [Implement magnet and giant star power-up items](worklog/douyun0623/2026-06/20260613T0648-implement-magnet-and-giant-star-power-up-items.md) — douyun0623 active.
 - [Implement dash stacks and automatic recharge system](worklog/douyun0623/2026-06/20260613T0646-implement-dash-stacks-and-automatic-recharge-system.md) — douyun0623 active.
 - [Disable screen shake on game over for cleaner restart UI](worklog/douyun0623/2026-06/20260613T0642-disable-screen-shake-on-game-over-for-cleaner-restart-ui.md) — douyun0623 active.
-- [Implement dynamic distance-based spawning safety rule to prevent scroll deaths while keeping gameplay difficulty](worklog/douyun0623/2026-06/20260613T0627-implement-dynamic-distance-based-spawning-safety-rule-to-prevent-scroll-deaths-w.md) — douyun0623 active.
 
 ## Related
 

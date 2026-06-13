@@ -130,7 +130,8 @@ class Player(
         }
 
         // 현재 위치에서의 발판 확인 (피버타임 시 낙사 방지용 가상 바닥 제공)
-        val currentPlatform = platformManager.getPlatformAt(x)
+        val playerWidth = if (isGiant) width * 1.6f else width
+        val currentPlatform = platformManager.getPlatformAt(x, playerWidth)
         val platformTopY = if (currentPlatform != null) {
             currentPlatform.topY
         } else if (isFever) {
@@ -186,7 +187,7 @@ class Player(
             // 착지 판정: 위에서 아래로 떨어질 때 발판 상단면을 지나치면 착지
             // 발판 위 10px 정도의 여유를 두어 프레임 드랍 시에도 착지 판정이 잘 되도록 함
             val landingY = platformTopY - height / 2f
-            if (velocityY >= 0 && y <= landingY + 10f && nextY >= landingY) {
+            if (velocityY >= 0 && y <= landingY + 20f && nextY >= landingY) {
                 y = landingY
                 velocityY = 0f
                 crouchTimeLeft = crouchDuration
