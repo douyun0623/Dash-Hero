@@ -78,7 +78,15 @@ class PlatformManager(private val screenWidth: Float) : IGameObject {
             }
             val targetY = platformY + heightOffset
             val centerX = lastX + unitWidth / 2f
-            platforms.add(GroundPlatform(centerX, targetY, unitWidth + 2f, platformHeight)) // 이음새 방지를 위해 +2f
+            val randType = Math.random()
+            val platformType = when {
+                spawnCount <= 5 -> PlatformType.NORMAL
+                isFeverMode -> PlatformType.NORMAL
+                randType < 0.80 -> PlatformType.NORMAL
+                randType < 0.90 -> PlatformType.MOVING_X
+                else -> PlatformType.MOVING_Y
+            }
+            platforms.add(GroundPlatform(centerX, targetY, unitWidth + 2f, platformHeight, platformType)) // 이음새 방지를 위해 +2f
             
             // 플레이어와의 거리가 650px 이하인 너무 가까운 경우 적 스폰을 제한하여 복귀 시 억까 방지
             val distanceToPlayer = centerX - playerScreenX
