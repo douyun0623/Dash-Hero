@@ -7,7 +7,7 @@
 * **3차 최종 발표 영상**: [3차 최종 발표 영상 링크 (구글 드라이브/유튜브)]
 * **3차 최종 Signed APK 다운로드**: [최종 Signed APK 다운로드 링크 (구글 드라이브)]
 * **2차 발표 영상 자료**: [2차 발표 영상 링크](https://www.youtube.com/watch?v=qfScB1W2sp8)
-* **2차 발표 버전 README.md**: [2차 README.md 링크](https://github.com/douyun0623/Dash-Hero/blob/main/README.md)
+* **2차 발표 버전 README.md**: [2차 README.md 링크](https://github.com/douyun0623/Dash-Hero/blob/c14d8d2aee92633de12c15da970ed15fe332e3c2/README.md)
 * **1차 발표 영상 자료**: [1차 발표 영상 링크](https://youtu.be/XtZi-GZ4ehE)
 * **1차 발표 버전 README.md**: [1차 발표 README.md](https://github.com/douyun0623/Dash-Hero/blob/035855e/README.md)
 
