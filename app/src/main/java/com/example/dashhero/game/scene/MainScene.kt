@@ -488,25 +488,42 @@ class MainScene(gctx: GameContext) : Scene(gctx) {
                 }
             }
 
-            // 버프 타이머 UI 렌더링 (피버 배터리 게이지 오른쪽)
-            var buffOffset = 0f
-            val buffUiY = 110f
-            val buffStartX = 420f
-            val barHeight = 16f
-            val barMaxWidth = 100f
-            
-            if (player.isMagnetActive) {
-                val magnetPaint = Paint().apply { color = Color.rgb(60, 150, 255); style = Paint.Style.FILL }
-                val ratio = player.magnetTimeLeft / 6.0f
-                canvas.drawRect(buffStartX, buffUiY - barHeight / 2f, buffStartX + barMaxWidth * ratio, buffUiY + barHeight / 2f, magnetPaint)
-                buffOffset += 120f
-            }
-            
-            if (player.isGiant) {
-                val starBarPaint = Paint().apply { color = Color.rgb(255, 170, 0); style = Paint.Style.FILL }
-                val ratio = player.giantTimeLeft / 5.0f
-                val sx = buffStartX + buffOffset
-                canvas.drawRect(sx, buffUiY - barHeight / 2f, sx + barMaxWidth * ratio, buffUiY + barHeight / 2f, starBarPaint)
+            // 버프 타이머 UI 렌더링 (피버 배터리 게이지 아래쪽에 단정하게 배치하여 중앙 점수판과의 겹침 현상 해결)
+            if (player.isMagnetActive || player.isGiant) {
+                val panelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                    color = Color.argb(45, 0, 0, 0) // Translucent dark background for premium look
+                    style = Paint.Style.FILL
+                }
+                val panelRect = RectF(64f, 145f, 320f, 185f)
+                canvas.drawRoundRect(panelRect, 8f, 8f, panelPaint)
+
+                var buffOffset = 0f
+                val buffUiY = 165f
+                val buffStartX = 80f
+                val barHeight = 12f
+                val barMaxWidth = 90f
+
+                if (player.isMagnetActive) {
+                    val magnetPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                        color = Color.rgb(60, 160, 255) // Cyan-blue magnet buff bar
+                        style = Paint.Style.FILL
+                    }
+                    val ratio = player.magnetTimeLeft / 6.0f
+                    val rect = RectF(buffStartX, buffUiY - barHeight / 2f, buffStartX + barMaxWidth * ratio, buffUiY + barHeight / 2f)
+                    canvas.drawRoundRect(rect, 4f, 4f, magnetPaint)
+                    buffOffset += 120f
+                }
+
+                if (player.isGiant) {
+                    val starBarPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                        color = Color.rgb(255, 170, 0) // Gold giant buff bar
+                        style = Paint.Style.FILL
+                    }
+                    val ratio = player.giantTimeLeft / 5.0f
+                    val sx = buffStartX + buffOffset
+                    val rect = RectF(sx, buffUiY - barHeight / 2f, sx + barMaxWidth * ratio, buffUiY + barHeight / 2f)
+                    canvas.drawRoundRect(rect, 4f, 4f, starBarPaint)
+                }
             }
             
             // Draw Pause button in upper right
