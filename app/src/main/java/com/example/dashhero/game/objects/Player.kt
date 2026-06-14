@@ -242,14 +242,6 @@ class Player(
         bounds.set(x - drawWidth / 2f, y - drawHeight / 2f, x + drawWidth / 2f, y + drawHeight / 2f)
         canvas.drawRoundRect(bounds, 32f * scale, 32f * scale, paint)
 
-        // 디버그용 충돌 박스 가시화 (빨간색 테두리)
-        val debugPaint = Paint().apply {
-            color = Color.RED
-            style = Paint.Style.STROKE
-            strokeWidth = 4f
-        }
-        val bb = getBoundingBox()
-        canvas.drawRect(bb, debugPaint)
     }
 
     fun collectBattery() {

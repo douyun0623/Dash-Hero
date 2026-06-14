@@ -109,14 +109,6 @@ class DroneEnemy(
 
         canvas.restore()
 
-        // 디버그용 충돌 박스 가시화 (빨간색 테두리)
-        val debugPaint = Paint().apply {
-            color = Color.RED
-            style = Paint.Style.STROKE
-            strokeWidth = 4f
-        }
-        val bb = getBoundingBox()
-        canvas.drawRect(bb, debugPaint)
     }
 
     fun getBoundingBox(): RectF {
