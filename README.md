@@ -5,7 +5,6 @@
 * **프로젝트 제목**: Dash Hero
 * **Git Repository**: [GitHub 저장소 링크](https://github.com/douyun0623/Dash-Hero)
 * **3차 최종 발표 영상**: [3차 최종 발표 영상 링크](https://www.youtube.com/watch?v=97vl498Pt-w)
-* **3차 최종 Signed APK 다운로드**: [최종 Signed APK 다운로드 링크 (구글 드라이브)]
 * **3차 최종 버전 README.md**: [3차 README.md 링크](https://github.com/douyun0623/Dash-Hero/blob/main/README.md)
 * **2차 발표 영상 자료**: [2차 발표 영상 링크](https://www.youtube.com/watch?v=qfScB1W2sp8)
 * **2차 발표 버전 README.md**: [2차 README.md 링크](https://github.com/douyun0623/Dash-Hero/blob/c14d8d2aee92633de12c15da970ed15fe332e3c2/README.md)
