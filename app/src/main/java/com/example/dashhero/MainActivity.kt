@@ -10,9 +10,9 @@ import kr.ac.tukorea.ge.spgp2026.a2dg.scene.Scene
 import kr.ac.tukorea.ge.spgp2026.a2dg.view.GameContext
 
 class MainActivity : BaseGameActivity() {
-    override val drawsDebugGrid = BuildConfig.DRAWS_DEBUG_GRID
-    override val drawsDebugInfo = BuildConfig.DRAWS_DEBUG_INFO
-    override val drawsFpsGraph = BuildConfig.DRAWS_FPS_GRAPH
+    override val drawsDebugGrid = false
+    override val drawsDebugInfo = false
+    override val drawsFpsGraph = false
 
     private var bgmPlayer: MediaPlayer? = null
 
